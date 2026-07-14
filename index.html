@@ -1,0 +1,3808 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kongfanxaun</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f0f2f5;
+            color: #1d2129;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            background: #ffffff;
+            padding: 0 32px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            border-bottom: 1px solid #e8eaed;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e2b3c;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        .logo span {
+            background: #1e2b3c;
+            color: #fff;
+            font-size: 12px;
+            padding: 0 8px;
+            border-radius: 4px;
+            margin-left: 4px;
+        }
+        .announcement-bar {
+            background: linear-gradient(135deg, #1e2b3c 0%, #2c3e50 100%);
+            color: #fff;
+            padding: 8px 0;
+            overflow: hidden;
+            position: relative;
+            flex-shrink: 0;
+            border-bottom: 2px solid #f0c040;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+        }
+        .announcement-bar .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 32px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            overflow: hidden;
+        }
+        .announcement-bar .label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #f0c040;
+            white-space: nowrap;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .announcement-bar .label .icon {
+            font-size: 18px;
+        }
+        .announcement-scroll {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            height: 28px;
+        }
+        .announcement-track {
+            display: flex;
+            flex-direction: column;
+            animation: scrollAnnounce 12s infinite;
+            will-change: transform;
+        }
+        .announcement-track .item {
+            height: 28px;
+            line-height: 28px;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 20px;
+            color: #e8edf3;
+        }
+        .announcement-track .item .time {
+            color: #8aa3b8;
+            font-size: 12px;
+            margin-left: 12px;
+        }
+        @keyframes scrollAnnounce {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(calc(-100% + 28px));
+            }
+        }
+        .announcement-bar:hover .announcement-track {
+            animation-play-state: paused;
+        }
+        .nav-links {
+            display: flex;
+            gap: 4px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        .nav-links li {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4e5a6b;
+            cursor: pointer;
+            transition: 0.15s;
+            white-space: nowrap;
+        }
+        .nav-links li:hover {
+            background: #f2f4f8;
+            color: #1d2129;
+        }
+        .nav-links li.active {
+            background: #eef2f8;
+            color: #1e2b3c;
+            font-weight: 600;
+        }
+        .nav-divider {
+            color: #d9dfe8;
+            padding: 0 2px;
+            user-select: none;
+        }
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1d2129;
+            background: #f2f4f8;
+            padding: 4px 14px 4px 10px;
+            border-radius: 20px;
+        }
+        .user-badge .avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #1e2b3c;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .btn-logout {
+            background: transparent;
+            border: 1px solid #d9dfe8;
+            padding: 5px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #4e5a6b;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .btn-logout:hover {
+            background: #f2f4f8;
+            border-color: #b8c3d0;
+        }
+        .btn-chat {
+            background: #2c5778;
+            color: #fff;
+            border: none;
+            padding: 5px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-chat:hover {
+            background: #1e405c;
+        }
+        .btn-chat .badge {
+            background: #f0c040;
+            color: #1d2129;
+            font-size: 10px;
+            border-radius: 50%;
+            padding: 0 6px;
+            min-width: 18px;
+            text-align: center;
+            font-weight: 700;
+        }
+        .main-wrapper {
+            display: flex;
+            flex: 1;
+            padding: 24px 32px 32px 32px;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .content {
+            flex: 1;
+            min-width: 0;
+        }
+        .panel {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e8eaed;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            padding: 20px 24px;
+            margin-bottom: 20px;
+        }
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .panel-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1d2129;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .panel-title .badge-count {
+            background: #e8eaed;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 0 10px;
+            border-radius: 12px;
+            color: #4e5a6b;
+        }
+        .panel-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .input-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .input-row label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1d2129;
+            min-width: 60px;
+        }
+        .input-row input,
+        .input-row select {
+            flex: 1;
+            min-width: 140px;
+            padding: 7px 14px;
+            border: 1px solid #d9dfe8;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fafbfc;
+            outline: none;
+            transition: 0.15s;
+        }
+        .input-row input:focus,
+        .input-row select:focus {
+            border-color: #1e2b3c;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(30, 43, 60, 0.08);
+        }
+        .input-row input[type="file"] {
+            padding: 5px 8px;
+            background: transparent;
+            border: none;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 7px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.15s;
+            background: #f2f4f8;
+            color: #1d2129;
+            white-space: nowrap;
+        }
+        .btn:hover {
+            background: #e5e8ed;
+        }
+        .btn-primary {
+            background: #1e2b3c;
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background: #141e2b;
+        }
+        .btn-success {
+            background: #1f7b4d;
+            color: #ffffff;
+        }
+        .btn-success:hover {
+            background: #15663e;
+        }
+        .btn-danger {
+            background: #b13e3e;
+            color: #ffffff;
+        }
+        .btn-danger:hover {
+            background: #942f2f;
+        }
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #d9dfe8;
+        }
+        .btn-outline:hover {
+            background: #f2f4f8;
+        }
+        .btn-warning {
+            background: #b8860b;
+            color: #fff;
+        }
+        .btn-warning:hover {
+            background: #9a7209;
+        }
+        .list {
+            list-style: none;
+        }
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f2f5;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        .list-item .main {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .list-item .main .name {
+            font-weight: 500;
+            font-size: 14px;
+            color: #1d2129;
+        }
+        .list-item .main .tag {
+            font-size: 12px;
+            background: #eef2f8;
+            padding: 0 10px;
+            border-radius: 12px;
+            color: #4e5a6b;
+        }
+        .list-item .main .title-tag {
+            font-size: 11px;
+            background: #f0c040;
+            padding: 0 10px;
+            border-radius: 12px;
+            color: #1d2129;
+            font-weight: 600;
+        }
+        .list-item .main .private-tag {
+            font-size: 11px;
+            background: #fce8e8;
+            padding: 0 10px;
+            border-radius: 12px;
+            color: #b13e3e;
+            font-weight: 600;
+        }
+        .list-item .actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .empty {
+            color: #9aa6b5;
+            font-size: 14px;
+            padding: 8px 0;
+            text-align: center;
+        }
+        .flash {
+            background: #e4f0e9;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: #15543b;
+            font-size: 14px;
+            margin-top: 8px;
+            display: inline-block;
+        }
+        .flash-error {
+            background: #fce8e8;
+            color: #a13d3d;
+        }
+        .mt-2 {
+            margin-top: 8px;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .flex-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .discuss-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f2f5;
+            position: relative;
+        }
+        .discuss-item:last-child {
+            border-bottom: none;
+        }
+        .discuss-item .discuss-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+        .discuss-item .discuss-header .author {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1d2129;
+        }
+        .discuss-item .discuss-header .time {
+            font-size: 12px;
+            color: #9aa6b5;
+        }
+        .discuss-item .discuss-header .title-badge {
+            font-size: 11px;
+            background: #f0c040;
+            color: #1d2129;
+            padding: 0 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .discuss-item .discuss-content {
+            font-size: 14px;
+            color: #1d2129;
+            padding-left: 4px;
+        }
+        .discuss-item .discuss-actions {
+            margin-top: 6px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .discuss-item .discuss-actions button {
+            background: transparent;
+            border: none;
+            font-size: 13px;
+            color: #7a8a9e;
+            cursor: pointer;
+            transition: 0.15s;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .discuss-item .discuss-actions button:hover {
+            background: #f2f4f8;
+            color: #1d2129;
+        }
+        .discuss-item .discuss-actions .like-btn.active {
+            color: #e74c3c;
+        }
+        .discuss-item .discuss-actions .withdrawn {
+            color: #9aa6b5;
+            font-style: italic;
+        }
+        .discuss-item .reply-area {
+            margin-top: 8px;
+            padding-left: 20px;
+            border-left: 3px solid #e8eaed;
+        }
+        .discuss-item .reply-item {
+            padding: 6px 0;
+            border-bottom: 1px solid #f5f6f8;
+            font-size: 13px;
+        }
+        .discuss-item .reply-item:last-child {
+            border-bottom: none;
+        }
+        .discuss-item .reply-item .reply-author {
+            font-weight: 600;
+            color: #1d2129;
+        }
+        .discuss-item .reply-item .reply-time {
+            font-size: 11px;
+            color: #9aa6b5;
+            margin-left: 8px;
+        }
+        .discuss-input-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            align-items: flex-start;
+        }
+        .discuss-input-area textarea {
+            flex: 1;
+            padding: 8px 14px;
+            border: 1px solid #d9dfe8;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 50px;
+            outline: none;
+            transition: 0.15s;
+            background: #fafbfc;
+        }
+        .discuss-input-area textarea:focus {
+            border-color: #1e2b3c;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(30, 43, 60, 0.08);
+        }
+        .discuss-input-area .btn {
+            align-self: flex-end;
+        }
+        .reply-input-area {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+            align-items: flex-start;
+        }
+        .reply-input-area input {
+            flex: 1;
+            padding: 6px 12px;
+            border: 1px solid #d9dfe8;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+            background: #fafbfc;
+        }
+        .reply-input-area input:focus {
+            border-color: #1e2b3c;
+            background: #ffffff;
+        }
+        .reply-input-area .btn {
+            padding: 4px 12px;
+            font-size: 12px;
+        }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+        .team-card {
+            background: #ffffff;
+            border: 1px solid #e8eaed;
+            border-radius: 12px;
+            padding: 16px 18px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .team-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-color: #c8d2e0;
+        }
+        .team-card .team-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1d2129;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .team-card .team-name .lock {
+            font-size: 14px;
+            color: #7a8a9e;
+        }
+        .team-card .team-desc {
+            font-size: 13px;
+            color: #7a8a9e;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .team-card .team-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #4e5a6b;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .team-card .team-meta .owner {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .team-card .team-meta .owner .avatar-sm {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #1e2b3c;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .team-card .team-meta .badge-permission {
+            font-size: 11px;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        .badge-permission.public {
+            background: #e4f0e9;
+            color: #1f7b4d;
+        }
+        .badge-permission.protected {
+            background: #fff3e0;
+            color: #b8860b;
+        }
+        .badge-permission.private {
+            background: #fce8e8;
+            color: #b13e3e;
+        }
+        .team-card .team-meta .members {
+            color: #7a8a9e;
+            font-size: 12px;
+        }
+        .team-card .team-meta .date {
+            color: #9aa6b5;
+            font-size: 12px;
+        }
+        .team-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e8eaed;
+        }
+        .team-detail-header .info h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1d2129;
+        }
+        .team-detail-header .info .sub {
+            font-size: 14px;
+            color: #7a8a9e;
+            margin-top: 4px;
+        }
+        .team-detail-header .info .sub span {
+            margin-right: 16px;
+        }
+        .team-detail-body {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .team-detail-body .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1d2129;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .team-detail-body .section-title .count {
+            font-weight: 400;
+            color: #7a8a9e;
+            font-size: 13px;
+        }
+        .team-detail-body .member-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .team-detail-body .member-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #f2f4f8;
+            padding: 4px 12px 4px 8px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #1d2129;
+        }
+        .team-detail-body .member-item .avatar-sm {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #1e2b3c;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .team-detail-body .member-item .leader-badge {
+            font-size: 10px;
+            background: #f0c040;
+            color: #1d2129;
+            padding: 0 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .team-detail-body .member-item .status-badge {
+            font-size: 10px;
+            padding: 0 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .team-detail-body .member-item .title-badge-sm {
+            font-size: 10px;
+            background: #f0c040;
+            padding: 0 6px;
+            border-radius: 10px;
+            font-weight: 600;
+            color: #1d2129;
+        }
+        .status-badge.pending {
+            background: #fff3e0;
+            color: #b8860b;
+        }
+        .status-badge.member {
+            background: #e4f0e9;
+            color: #1f7b4d;
+        }
+        .team-detail-body .announce-item {
+            padding: 10px 14px;
+            background: #f8faff;
+            border-radius: 8px;
+            border-left: 3px solid #1e2b3c;
+            margin-bottom: 8px;
+        }
+        .team-detail-body .announce-item .content {
+            font-size: 14px;
+            color: #1d2129;
+        }
+        .team-detail-body .announce-item .time {
+            font-size: 12px;
+            color: #9aa6b5;
+            margin-top: 4px;
+        }
+        .team-detail-body .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 14px;
+        }
+        .team-detail-body .file-item:last-child {
+            border-bottom: none;
+        }
+        .team-detail-body .file-item .name {
+            color: #1d2129;
+        }
+        .team-detail-body .file-item .actions {
+            display: flex;
+            gap: 6px;
+        }
+        .back-btn {
+            background: transparent;
+            border: none;
+            color: #4e5a6b;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: 0.15s;
+        }
+        .back-btn:hover {
+            background: #f2f4f8;
+        }
+        .search-bar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .search-bar input {
+            flex: 1;
+            min-width: 200px;
+            padding: 8px 16px;
+            border: 1px solid #d9dfe8;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fafbfc;
+            outline: none;
+            transition: 0.15s;
+        }
+        .search-bar input:focus {
+            border-color: #1e2b3c;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(30, 43, 60, 0.08);
+        }
+        .filter-tabs {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .filter-tabs .tab {
+            padding: 4px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.15s;
+            color: #4e5a6b;
+            background: transparent;
+            border: none;
+        }
+        .filter-tabs .tab:hover {
+            background: #f2f4f8;
+        }
+        .filter-tabs .tab.active {
+            background: #1e2b3c;
+            color: #ffffff;
+        }
+        .login-required {
+            text-align: center;
+            padding: 30px 20px;
+            color: #7a8a9e;
+        }
+        .login-required .icon {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 12px;
+        }
+        .login-required .tip {
+            font-size: 16px;
+            font-weight: 500;
+            color: #4e5a6b;
+            margin-bottom: 4px;
+        }
+        .login-required .sub-tip {
+            font-size: 14px;
+            color: #9aa6b5;
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 28px 32px;
+            max-width: 560px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d2129;
+            margin-bottom: 8px;
+        }
+        .modal .modal-desc {
+            font-size: 14px;
+            color: #7a8a9e;
+            margin-bottom: 16px;
+        }
+        .modal .input-row {
+            margin-bottom: 12px;
+        }
+        .modal .input-row label {
+            min-width: 80px;
+        }
+        .modal .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+        .modal .modal-actions .btn {
+            min-width: 80px;
+        }
+        .modal .user-checkbox-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 8px 4px;
+            border: 1px solid #e8eaed;
+            border-radius: 8px;
+            background: #fafbfc;
+        }
+        .modal .user-checkbox-list label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: #f2f4f8;
+            min-width: 60px;
+        }
+        .modal .user-checkbox-list label:hover {
+            background: #e5e8ed;
+        }
+        .modal .user-checkbox-list input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+        }
+        .leader-actions {
+            background: #f8faff;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 8px;
+            border: 1px dashed #c8d2e0;
+        }
+        .leader-actions .action-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin-top: 6px;
+        }
+        .leader-actions .action-row:first-child {
+            margin-top: 0;
+        }
+        .leader-actions .action-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #4e5a6b;
+            min-width: 60px;
+        }
+        .leader-actions input[type="text"],
+        .leader-actions input[type="file"] {
+            flex: 1;
+            min-width: 120px;
+            padding: 5px 12px;
+            border: 1px solid #d9dfe8;
+            border-radius: 6px;
+            font-size: 13px;
+            background: #ffffff;
+            outline: none;
+        }
+        .leader-actions input[type="text"]:focus {
+            border-color: #1e2b3c;
+        }
+        .punish-panel {
+            background: #fdf6f6;
+            border: 1px solid #fce8e8;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 8px;
+        }
+        .punish-panel .punish-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            font-size: 13px;
+            flex-wrap: wrap;
+        }
+        .punish-panel .punish-item .punish-user {
+            font-weight: 600;
+            min-width: 80px;
+        }
+        .punish-panel .punish-item .punish-reason {
+            color: #7a8a9e;
+            font-size: 12px;
+        }
+        .report-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 13px;
+        }
+        .report-item:last-child {
+            border-bottom: none;
+        }
+        .report-item .report-meta {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: #7a8a9e;
+            font-size: 12px;
+        }
+        .report-item .report-content {
+            margin: 4px 0;
+        }
+        .private-badge {
+            background: #fce8e8;
+            color: #b13e3e;
+            font-size: 11px;
+            padding: 0 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-left: 6px;
+        }
+        .role-btn-group {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .role-btn-group .btn-sm {
+            padding: 2px 10px;
+            font-size: 11px;
+        }
+        .chat-list-item {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0f2f5;
+            cursor: pointer;
+            transition: 0.15s;
+            border-radius: 8px;
+        }
+        .chat-list-item:hover {
+            background: #f2f4f8;
+        }
+        .chat-list-item .chat-user {
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .chat-list-item .chat-preview {
+            font-size: 13px;
+            color: #7a8a9e;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chat-list-item .chat-time {
+            font-size: 11px;
+            color: #9aa6b5;
+        }
+        .chat-window {
+            display: flex;
+            flex-direction: column;
+            height: 450px;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 4px;
+            background: #f8faff;
+            border-radius: 8px;
+            border: 1px solid #e8eaed;
+            min-height: 250px;
+            max-height: 350px;
+        }
+        .chat-message {
+            padding: 8px 14px;
+            margin-bottom: 6px;
+            border-radius: 12px;
+            max-width: 80%;
+            word-wrap: break-word;
+            font-size: 14px;
+        }
+        .chat-message.sent {
+            background: #1e2b3c;
+            color: #fff;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .chat-message.received {
+            background: #eef2f8;
+            color: #1d2129;
+            align-self: flex-start;
+        }
+        .chat-message .msg-time {
+            font-size: 10px;
+            color: #9aa6b5;
+            margin-top: 2px;
+            display: block;
+        }
+        .chat-message.sent .msg-time {
+            color: #8aa3b8;
+        }
+        .chat-message .file-attachment {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-top: 4px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .chat-message .file-attachment:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        .chat-message.sent .file-attachment {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .chat-message.sent .file-attachment:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .chat-message.received .file-attachment {
+            background: #d9dfe8;
+        }
+        .chat-message.received .file-attachment:hover {
+            background: #c8d2e0;
+        }
+        .chat-message .file-attachment .file-name {
+            font-size: 13px;
+        }
+        .chat-input-area {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            align-items: flex-end;
+        }
+        .chat-input-area textarea {
+            flex: 1;
+            padding: 8px 14px;
+            border: 1px solid #d9dfe8;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 44px;
+            max-height: 100px;
+            outline: none;
+            background: #fafbfc;
+        }
+        .chat-input-area textarea:focus {
+            border-color: #1e2b3c;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(30, 43, 60, 0.08);
+        }
+        .chat-input-area .btn {
+            align-self: flex-end;
+        }
+        .chat-input-area .file-upload-btn {
+            background: transparent;
+            border: 1px solid #d9dfe8;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 18px;
+            align-self: flex-end;
+            transition: 0.15s;
+        }
+        .chat-input-area .file-upload-btn:hover {
+            background: #f2f4f8;
+        }
+        .chat-input-area input[type="file"] {
+            display: none;
+        }
+        .chat-user-select {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .chat-user-select select {
+            flex: 1;
+            min-width: 150px;
+            padding: 7px 14px;
+            border: 1px solid #d9dfe8;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fafbfc;
+            outline: none;
+        }
+        .chat-user-select select:focus {
+            border-color: #1e2b3c;
+        }
+        .access-denied {
+            color: #b13e3e;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 2px 10px;
+            background: #fce8e8;
+            border-radius: 12px;
+        }
+        @media (max-width: 820px) {
+            .main-wrapper {
+                padding: 16px;
+            }
+            .navbar {
+                padding: 0 16px;
+                flex-wrap: wrap;
+                height: auto;
+                min-height: 52px;
+                gap: 6px;
+            }
+            .announcement-bar .container {
+                padding: 0 16px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .announcement-scroll {
+                height: 24px;
+            }
+            .announcement-track .item {
+                height: 24px;
+                line-height: 24px;
+                font-size: 13px;
+            }
+            @keyframes scrollAnnounce {
+                0% {
+                    transform: translateY(0);
+                }
+                100% {
+                    transform: translateY(calc(-100% + 24px));
+                }
+            }
+            .nav-links {
+                gap: 2px;
+            }
+            .nav-links li {
+                padding: 4px 10px;
+                font-size: 13px;
+            }
+            .navbar-right {
+                gap: 8px;
+            }
+            .panel {
+                padding: 14px 16px;
+            }
+            .input-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .input-row label {
+                min-width: auto;
+            }
+            .nav-divider {
+                display: none;
+            }
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal {
+                padding: 20px;
+            }
+            .leader-actions .action-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .leader-actions .action-label {
+                min-width: auto;
+            }
+            .discuss-input-area {
+                flex-direction: column;
+            }
+            .discuss-input-area .btn {
+                align-self: stretch;
+            }
+            .team-detail-header {
+                flex-direction: column;
+            }
+            .modal .user-checkbox-list {
+                max-height: 100px;
+            }
+            .role-btn-group {
+                justify-content: flex-start;
+            }
+            .chat-window {
+                height: 350px;
+            }
+            .chat-messages {
+                max-height: 250px;
+                min-height: 150px;
+            }
+            .chat-input-area {
+                flex-wrap: wrap;
+            }
+            .chat-input-area textarea {
+                min-height: 36px;
+            }
+            .btn-chat {
+                padding: 4px 10px;
+                font-size: 12px;
+            }
+            .btn-chat .badge {
+                font-size: 9px;
+                min-width: 14px;
+                padding: 0 4px;
+            }
+        }
+        @media (max-width: 480px) {
+            .navbar-left {
+                gap: 10px;
+            }
+            .logo {
+                font-size: 17px;
+            }
+            .nav-links li {
+                font-size: 12px;
+                padding: 3px 8px;
+            }
+            .announcement-bar .label {
+                font-size: 12px;
+            }
+            .announcement-track .item {
+                font-size: 12px;
+            }
+            .role-btn-group .btn-sm {
+                font-size: 10px;
+                padding: 1px 6px;
+            }
+            .chat-message {
+                max-width: 95%;
+            }
+            .btn-chat {
+                padding: 3px 8px;
+                font-size: 11px;
+            }
+            .btn-chat .badge {
+                font-size: 8px;
+                min-width: 12px;
+                padding: 0 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="announcement-bar" id="announcementBar">
+        <div class="container">
+            <div class="label">
+                <span class="icon">📢</span> 公告
+            </div>
+            <div class="announcement-scroll" id="announcementScroll">
+                <div class="announcement-track" id="announcementTrack">
+                    <div class="item" style="color:#8aa3b8;">暂无公告</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar" id="navbar">
+        <div class="navbar-left">
+            <div class="logo">📁 PCL <span>v2</span></div>
+            <ul class="nav-links" id="navLinks">
+                <li data-page="pageHome" class="active">首页</li>
+                <li data-page="pageTeams">团队</li>
+                <li data-page="pagePublicFiles">公共文件</li>
+                <li data-page="pagePrivateFiles">🔒 私密文件</li>
+                <li data-page="pageChat" id="navChat">💬 私信</li>
+                <li data-page="pageLogin" id="navLogin">登录</li>
+                <li data-page="pageRegister" id="navRegister">注册申请</li>
+                <li data-page="pageProfile" id="navProfile" class="hidden">我的账户</li>
+                <li data-page="pageUserList" id="navUserList" class="hidden">用户列表</li>
+                <span class="nav-divider hidden" id="navDivider1">|</span>
+                <li data-page="pageRequests" id="navRequests" class="hidden">注册申请</li>
+                <li data-page="pageAnnounce" id="navAnnounce" class="hidden">发布公告</li>
+                <li data-page="pageCreateUser" id="navCreateUser" class="hidden">创建用户</li>
+                <li data-page="pageAssignLeader" id="navAssignLeader" class="hidden">指定组长</li>
+                <li data-page="pageReports" id="navReports" class="hidden">📋 举报</li>
+                <li data-page="pagePunish" id="navPunish" class="hidden">🔨 惩罚</li>
+                <li data-page="pageTitles" id="navTitles" class="hidden">🏅 头衔</li>
+            </ul>
+        </div>
+        <div class="navbar-right" id="navbarRight">
+            <div class="user-badge" id="userBadge">
+                <span class="avatar" id="userAvatar">A</span>
+                <span id="userNameDisplay">未登录</span>
+            </div>
+            <button class="btn-logout hidden" id="logoutBtn">退出</button>
+        </div>
+    </nav>
+
+    <div class="main-wrapper">
+        <div class="content" id="mainContent">
+
+            <!-- ===== 首页 ===== -->
+            <div class="page active" id="pageHome">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">🏠 首页</div>
+                    </div>
+                    <p style="color:#4e5a6b; font-size:15px;">欢迎使用团队协作平台</p>
+                </div>
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">📂 公共文件</div>
+                    </div>
+                    <div id="homePublicFileContainer">
+                        <div class="login-required" id="homePublicLoginRequired">
+                            <span class="icon">🔒</span>
+                            <div class="tip">请先登录查看公共文件</div>
+                            <div class="sub-tip">登录后可查看并下载所有公共文件</div>
+                        </div>
+                        <ul class="list" id="homePublicFileList"><li class="empty">暂无公共文件</li></ul>
+                    </div>
+                </div>
+                <div class="panel" id="discussPanel">
+                    <div class="panel-header">
+                        <div class="panel-title">💬 用户讨论区 <span class="badge-count" id="discussCount">0</span></div>
+                        <div class="panel-actions">
+                            <button class="btn btn-primary btn-sm" id="refreshDiscussBtn">🔄 刷新</button>
+                        </div>
+                    </div>
+                    <div id="discussLoginRequired" class="login-required">
+                        <span class="icon">🔒</span>
+                        <div class="tip">请先登录参与讨论</div>
+                        <div class="sub-tip">登录后可以发表帖子、回复和点赞</div>
+                    </div>
+                    <div id="discussContent" class="hidden">
+                        <div class="discuss-input-area">
+                            <textarea id="discussInput" placeholder="分享你的想法..." rows="2"></textarea>
+                            <button class="btn btn-success" id="postDiscussBtn">发布</button>
+                        </div>
+                        <div id="discussList" style="margin-top:12px;">
+                            <div class="empty">暂无讨论</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 登录 ===== -->
+            <div class="page" id="pageLogin">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">🔑 登录</div>
+                    </div>
+                    <div class="input-row">
+                        <label>账号</label>
+                        <input type="text" id="loginUsername" placeholder="输入用户名">
+                    </div>
+                    <div class="input-row">
+                        <label>密码</label>
+                        <input type="password" id="loginPassword" placeholder="输入密码">
+                    </div>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <button class="btn btn-primary" id="loginBtn">登录</button>
+                    </div>
+                    <div id="authMessage" class="mt-2"></div>
+                </div>
+            </div>
+
+            <!-- ===== 注册 ===== -->
+            <div class="page" id="pageRegister">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">📝 提交注册申请</div>
+                    </div>
+                    <div class="input-row">
+                        <label>账号</label>
+                        <input type="text" id="registerUsername" placeholder="输入用户名">
+                    </div>
+                    <div class="input-row">
+                        <label>密码</label>
+                        <input type="password" id="registerPassword" placeholder="输入密码">
+                    </div>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <button class="btn btn-primary" id="registerBtn">提交申请</button>
+                    </div>
+                    <div id="registerMessage" class="mt-2"></div>
+                    <div style="font-size:12px; color:#9aa6b5; margin-top:8px;">💡 新用户需提交申请等待管理员审核</div>
+                </div>
+            </div>
+
+            <!-- ===== 我的账户 ===== -->
+            <div class="page" id="pageProfile">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">👤 我的账户</div>
+                    </div>
+                    <div class="input-row">
+                        <label>用户名</label>
+                        <input type="text" id="editUsername" placeholder="新用户名">
+                    </div>
+                    <div class="input-row">
+                        <label>新密码</label>
+                        <input type="password" id="editPassword" placeholder="留空则不修改">
+                    </div>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                        <button class="btn btn-primary" id="updateProfileBtn">更新信息</button>
+                        <span id="profileMessage" style="font-size:14px; color:#3d5a78;"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 用户列表 ===== -->
+            <div class="page" id="pageUserList">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">👥 用户列表 <span class="badge-count" id="userCount">0</span></div>
+                    </div>
+                    <ul class="list" id="userList"><li class="empty">加载中...</li></ul>
+                </div>
+            </div>
+
+            <!-- ===== 团队 ===== -->
+            <div class="page" id="pageTeams">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">🏢 团队管理</div>
+                        <div class="panel-actions">
+                            <button class="btn btn-success btn-sm" id="createTeamFromListBtn">➕ 创建团队</button>
+                        </div>
+                    </div>
+                    <div id="teamLoginRequired" class="login-required">
+                        <span class="icon">🔒</span>
+                        <div class="tip">请先登录查看团队</div>
+                        <div class="sub-tip">登录后可以创建和申请加入团队</div>
+                    </div>
+                    <div id="teamLoggedInContent" class="hidden">
+                        <div class="search-bar">
+                            <input type="text" id="teamSearchInput" placeholder="输入关键词搜索团队">
+                            <button class="btn btn-primary" id="teamSearchBtn">搜索</button>
+                            <button class="btn btn-outline" id="teamResetBtn">重置</button>
+                        </div>
+                        <div class="filter-tabs" id="filterTabs">
+                            <button class="tab active" data-filter="all">全部</button>
+                            <button class="tab" data-filter="public">公开团队</button>
+                            <button class="tab" data-filter="protected">保护团队</button>
+                            <button class="tab" data-filter="private">私有团队</button>
+                        </div>
+                        <div id="teamListContainer">
+                            <div class="team-grid" id="teamGrid">
+                                <div class="empty" style="grid-column:1/-1;">暂无团队，点击右上角"创建团队"开始</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 团队详情 ===== -->
+            <div class="page" id="pageTeamDetail">
+                <div class="panel">
+                    <button class="back-btn" id="backToTeamsBtn">← 返回团队列表</button>
+                    <div id="teamDetailContent">
+                        <div class="team-detail-header">
+                            <div class="info">
+                                <h2 id="detailTeamName">团队名称</h2>
+                                <div class="sub">
+                                    <span id="detailTeamOwner">负责人: --</span>
+                                    <span id="detailTeamPermission">权限: --</span>
+                                    <span id="detailTeamCreated">创建时间: --</span>
+                                    <span id="detailTeamId">编号: --</span>
+                                </div>
+                            </div>
+                            <div id="detailTeamActions">
+                                <button class="btn btn-primary btn-sm" id="detailJoinBtn">申请加入</button>
+                                <button class="btn btn-danger btn-sm hidden" id="detailDeleteBtn">删除团队</button>
+                            </div>
+                        </div>
+                        <div class="team-detail-body">
+                            <div>
+                                <div class="section-title">👥 成员 <span class="count" id="detailMemberCount">(0)</span></div>
+                                <div class="member-list" id="detailMemberList">
+                                    <span style="color:#9aa6b5; font-size:13px;">暂无成员</span>
+                                </div>
+                            </div>
+                            <div id="leaderActionsContainer" class="hidden">
+                                <div class="leader-actions">
+                                    <div class="section-title" style="margin-bottom:6px; font-size:13px;">🔧 组长管理</div>
+                                    <div class="action-row">
+                                        <span class="action-label">📢 公告</span>
+                                        <input type="text" id="leaderAnnounceInput" placeholder="输入公告内容">
+                                        <button class="btn btn-primary btn-sm" id="leaderPostAnnounceBtn">发布</button>
+                                    </div>
+                                    <div class="action-row">
+                                        <span class="action-label">📄 文件</span>
+                                        <input type="file" id="leaderFileInput">
+                                        <button class="btn btn-success btn-sm" id="leaderUploadFileBtn">上传</button>
+                                    </div>
+                                    <div class="action-row" id="pendingRequestsRow">
+                                        <span class="action-label">📩 入团申请</span>
+                                        <div id="pendingRequestsList" style="flex:1; font-size:13px; color:#4e5a6b;">
+                                            暂无待处理申请
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="section-title">📢 公告 <span class="count" id="detailAnnounceCount">(0)</span></div>
+                                <div id="detailAnnounceList">
+                                    <span style="color:#9aa6b5; font-size:13px;">暂无公告</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="section-title">📄 团队文件 <span class="count" id="detailFileCount">(0)</span></div>
+                                <div id="detailFileList">
+                                    <span style="color:#9aa6b5; font-size:13px;">暂无文件</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 公共文件 ===== -->
+            <div class="page" id="pagePublicFiles">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">📂 公共文件 <span class="badge-count" id="publicFileCount">0</span></div>
+                    </div>
+                    <div class="flex-wrap">
+                        <input type="file" id="publicFileInput" multiple style="flex:1; min-width:160px; padding:4px 8px; border:1px solid #d9dfe8; border-radius:8px; background:#fafbfc;">
+                        <button class="btn btn-success" id="uploadPublicBtn">⬆ 上传</button>
+                        <span style="font-size:12px; color:#7a8a9e;">管理员/组长可上传</span>
+                    </div>
+                    <ul class="list" id="publicFileList" style="margin-top:10px;"><li class="empty">暂无公共文件</li></ul>
+                    <div id="uploadMessage" class="mt-2"></div>
+                </div>
+            </div>
+
+            <!-- ===== 私密文件 ===== -->
+            <div class="page" id="pagePrivateFiles">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">🔒 私密文件 <span class="badge-count" id="privateFileCount">0</span></div>
+                    </div>
+                    <div id="privateFileContainer">
+                        <div class="login-required" id="privateLoginRequired">
+                            <span class="icon">🔒</span>
+                            <div class="tip">请先登录查看私密文件</div>
+                            <div class="sub-tip">只有被管理员指定的用户可以查看</div>
+                        </div>
+                        <div id="privateFileContent" class="hidden">
+                            <div class="flex-wrap" style="margin-bottom:12px;">
+                                <input type="file" id="privateFileInput" multiple style="flex:1; min-width:160px; padding:4px 8px; border:1px solid #d9dfe8; border-radius:8px; background:#fafbfc;">
+                                <button class="btn btn-success" id="uploadPrivateBtn">⬆ 上传私密文件</button>
+                            </div>
+                            <ul class="list" id="privateFileList"><li class="empty">暂无私密文件</li></ul>
+                            <div id="privateUploadMsg" class="mt-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 私信 ===== -->
+            <div class="page" id="pageChat">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">💬 私信 <span class="badge-count" id="chatCount">0</span></div>
+                        <div class="panel-actions">
+                            <button class="btn btn-primary btn-sm" id="chatRefreshBtn">🔄 刷新</button>
+                        </div>
+                    </div>
+                    <div id="chatLoginRequired" class="login-required">
+                        <span class="icon">🔒</span>
+                        <div class="tip">请先登录使用私信</div>
+                        <div class="sub-tip">登录后可以与指定用户进行私密聊天</div>
+                    </div>
+                    <div id="chatContent" class="hidden">
+                        <div class="chat-user-select">
+                            <select id="chatUserSelect">
+                                <option value="">-- 选择聊天对象 --</option>
+                            </select>
+                            <button class="btn btn-primary btn-sm" id="chatStartBtn">开始聊天</button>
+                        </div>
+                        <div id="chatConversation">
+                            <div class="empty" style="padding:20px;">选择一位用户开始聊天</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 举报管理 ===== -->
+            <div class="page" id="pageReports">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">📋 举报管理 <span class="badge-count" id="reportCount">0</span></div>
+                    </div>
+                    <div id="reportsList"><div class="empty">暂无举报</div></div>
+                </div>
+            </div>
+
+            <!-- ===== 惩罚管理 ===== -->
+            <div class="page" id="pagePunish">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">🔨 用户惩罚</div>
+                    </div>
+                    <div class="input-row">
+                        <label>用户</label>
+                        <input type="text" id="punishUsername" placeholder="输入用户名">
+                    </div>
+                    <div class="input-row">
+                        <label>限制</label>
+                        <select id="punishAction">
+                            <option value="ban_discuss">禁止讨论区发言</option>
+                            <option value="ban_download">禁止下载文件</option>
+                            <option value="ban_team">禁止加入/创建团队</option>
+                            <option value="ban_all">禁止所有操作</option>
+                        </select>
+                    </div>
+                    <div class="input-row">
+                        <label>原因</label>
+                        <input type="text" id="punishReason" placeholder="惩罚原因（可选）">
+                    </div>
+                    <button class="btn btn-danger" id="applyPunishBtn">执行惩罚</button>
+                    <div id="punishMsg" class="mt-2"></div>
+                    <hr style="margin:16px 0;">
+                    <div class="section-title">当前受罚用户</div>
+                    <ul class="list" id="punishList"><li class="empty">暂无受罚用户</li></ul>
+                </div>
+            </div>
+
+            <!-- ===== 头衔管理 ===== -->
+            <div class="page" id="pageTitles">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">🏅 用户头衔管理</div>
+                    </div>
+                    <div class="input-row">
+                        <label>用户</label>
+                        <input type="text" id="titleUsername" placeholder="输入用户名">
+                    </div>
+                    <div class="input-row">
+                        <label>头衔</label>
+                        <input type="text" id="titleInput" placeholder="自定义头衔（如：大神）">
+                    </div>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <button class="btn btn-success" id="setTitleBtn">设置头衔</button>
+                        <button class="btn btn-danger" id="removeTitleBtn">移除头衔</button>
+                    </div>
+                    <div id="titleMsg" class="mt-2"></div>
+                    <hr style="margin:16px 0;">
+                    <div class="section-title">头衔列表</div>
+                    <ul class="list" id="titleList"><li class="empty">暂无头衔</li></ul>
+                </div>
+            </div>
+
+            <!-- ===== 注册申请管理 ===== -->
+            <div class="page" id="pageRequests">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">📩 注册申请 <span class="badge-count" id="requestCount">0</span></div>
+                    </div>
+                    <ul class="list" id="requestList"><li class="empty">暂无待审核申请</li></ul>
+                </div>
+            </div>
+
+            <!-- ===== 发布公告 ===== -->
+            <div class="page" id="pageAnnounce">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">📢 管理员公告</div>
+                    </div>
+                    <div class="flex-wrap">
+                        <input type="text" id="adminAnnounceInput" placeholder="输入公告内容" style="flex:1; min-width:200px; padding:7px 14px; border:1px solid #d9dfe8; border-radius:8px; font-size:14px; background:#fafbfc;">
+                        <button class="btn btn-primary" id="postAdminAnnounceBtn">发布公告</button>
+                    </div>
+                    <ul class="list" id="adminAnnounceList" style="margin-top:10px;"><li class="empty">暂无公告</li></ul>
+                    <div id="announcePublishMsg" class="mt-2"></div>
+                </div>
+            </div>
+
+            <!-- ===== 创建用户 ===== -->
+            <div class="page" id="pageCreateUser">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">➕ 直接创建用户</div>
+                    </div>
+                    <div class="flex-wrap">
+                        <input type="text" id="adminCreateUsername" placeholder="用户名" style="flex:1; min-width:120px; padding:7px 14px; border:1px solid #d9dfe8; border-radius:8px; font-size:14px; background:#fafbfc;">
+                        <input type="password" id="adminCreatePassword" placeholder="密码" style="flex:1; min-width:120px; padding:7px 14px; border:1px solid #d9dfe8; border-radius:8px; font-size:14px; background:#fafbfc;">
+                        <select id="adminCreateRole" style="padding:7px 14px; border:1px solid #d9dfe8; border-radius:8px; font-size:14px; background:#fafbfc;">
+                            <option value="user">普通用户</option>
+                            <option value="leader">小组组长</option>
+                        </select>
+                        <button class="btn btn-success" id="adminCreateUserBtn">创建用户</button>
+                        <span id="adminCreateMsg" style="font-size:14px; color:#3d5a78;"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 指定组长 ===== -->
+            <div class="page" id="pageAssignLeader">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">⭐ 指定小组组长</div>
+                    </div>
+                    <div class="flex-wrap">
+                        <select id="assignLeaderSelect" style="flex:1; min-width:160px; padding:7px 14px; border:1px solid #d9dfe8; border-radius:8px; font-size:14px; background:#fafbfc;">
+                            <option value="">-- 选择用户 --</option>
+                        </select>
+                        <button class="btn btn-primary" id="assignLeaderBtn">设为组长</button>
+                        <span id="assignLeaderMsg" style="font-size:14px; color:#3d5a78;"></span>
+                    </div>
+                    <div style="margin-top:12px;">
+                        <div style="font-size:14px; font-weight:500; margin-bottom:6px;">当前组长：</div>
+                        <ul class="list" id="leaderList"><li class="empty">暂无组长</li></ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ===== 弹窗 ===== -->
+    <div class="modal-overlay" id="joinModal">
+        <div class="modal">
+            <h3 id="joinModalTitle">申请加入团队</h3>
+            <div class="modal-desc" id="joinModalDesc">请输入团队密码或邀请码以提交入团申请</div>
+            <div id="joinModalFields">
+                <div class="input-row hidden" id="joinPwdRow">
+                    <label>密码</label>
+                    <input type="password" id="joinPwdInput" placeholder="请输入团队密码">
+                </div>
+                <div class="input-row hidden" id="joinInviteRow">
+                    <label>邀请码</label>
+                    <input type="text" id="joinInviteInput" placeholder="请输入邀请码">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="joinModalCancel">取消</button>
+                <button class="btn btn-primary" id="joinModalConfirm">提交申请</button>
+            </div>
+            <div id="joinModalMsg" class="mt-2"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal">
+            <h3>📋 举报</h3>
+            <div class="modal-desc">请描述举报原因，管理员将进行审核</div>
+            <div class="input-row">
+                <label>原因</label>
+                <textarea id="reportReasonInput" rows="3" style="flex:1; padding:7px 14px; border:1px solid #d9dfe8; border-radius:8px; font-size:14px; font-family:inherit; resize:vertical; outline:none; background:#fafbfc; width:100%;"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="reportModalCancel">取消</button>
+                <button class="btn btn-danger" id="reportModalConfirm">提交举报</button>
+            </div>
+            <div id="reportModalMsg" class="mt-2"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="privateFileModal">
+        <div class="modal">
+            <h3 id="privateFileModalTitle">设置私密文件权限</h3>
+            <div class="modal-desc">选择可以查看此文件的用户</div>
+            <div id="privateFileModalFields">
+                <div class="input-row" style="flex-direction:column; align-items:stretch;">
+                    <label style="min-width:auto;">选择用户：</label>
+                    <div class="user-checkbox-list" id="privateUserCheckboxList"></div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="privateFileModalCancel">取消</button>
+                <button class="btn btn-primary" id="privateFileModalConfirm">确认设置</button>
+            </div>
+            <div id="privateFileModalMsg" class="mt-2"></div>
+        </div>
+    </div>
+
+    <script>
+        // ========== API 配置 ==========
+        var API_BASE = window.location.origin + '/api';
+
+        function getToken() {
+            return localStorage.getItem('authToken');
+        }
+
+        function setToken(token) {
+            if (token) {
+                localStorage.setItem('authToken', token);
+            } else {
+                localStorage.removeItem('authToken');
+            }
+        }
+
+        // ========== API 请求 ==========
+        async function apiRequest(endpoint, method, data) {
+            method = method || 'GET';
+            var token = getToken();
+            var headers = { 'Content-Type': 'application/json' };
+            if (token) {
+                headers['Authorization'] = 'Bearer ' + token;
+            }
+            var options = {
+                method: method,
+                headers: headers
+            };
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+            try {
+                var response = await fetch(API_BASE + endpoint, options);
+                if (response.status === 401) {
+                    setToken(null);
+                    currentUser = null;
+                    updateUIForLogout();
+                    return { error: '未登录' };
+                }
+                return response.json();
+            } catch (e) {
+                console.error('API请求失败:', e);
+                return { error: '网络错误' };
+            }
+        }
+
+        // ========== 全局数据 ==========
+        var currentUser = null;
+        var allUsers = [];
+        var allTeams = [];
+        var allDiscussions = [];
+        var allPublicFiles = [];
+        var allPrivateFiles = [];
+        var allReports = [];
+        var allPunishments = [];
+        var allTitles = [];
+        var allRegRequests = [];
+        var allAnnounces = [];
+        var currentChatPartner = null;
+
+        // ========== 页面切换 ==========
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(function(p) {
+                p.classList.remove('active');
+            });
+            var target = document.getElementById(pageId);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('#navLinks li[data-page]').forEach(function(link) {
+                link.classList.remove('active');
+                if (link.dataset.page === pageId) link.classList.add('active');
+            });
+
+            if (pageId === 'pageTeams') renderTeamList();
+            if (pageId === 'pageHome') { renderDiscussions();
+                renderPublicFiles(); }
+            if (pageId === 'pageReports') renderReports();
+            if (pageId === 'pagePunish') renderPunishments();
+            if (pageId === 'pageTitles') renderTitles();
+            if (pageId === 'pageUserList') renderUserList();
+            if (pageId === 'pagePrivateFiles') renderPrivateFiles();
+            if (pageId === 'pageChat') renderChat();
+        }
+
+        // ========== 导航点击事件 ==========
+        document.querySelectorAll('#navLinks li[data-page]').forEach(function(link) {
+            link.addEventListener('click', function() {
+                var pageId = this.dataset.page;
+                if (pageId) switchPage(pageId);
+            });
+        });
+
+        // ========== 加载数据 ==========
+        async function loadAllData() {
+            try {
+                var results = await Promise.all([
+                    apiRequest('/users'),
+                    apiRequest('/teams'),
+                    apiRequest('/discussions'),
+                    apiRequest('/public-files'),
+                    apiRequest('/private-files'),
+                    apiRequest('/reports'),
+                    apiRequest('/punishments'),
+                    apiRequest('/titles'),
+                    apiRequest('/reg-requests'),
+                    apiRequest('/announces')
+                ]);
+                allUsers = results[0] || [];
+                allTeams = results[1] || [];
+                allDiscussions = results[2] || [];
+                allPublicFiles = results[3] || [];
+                allPrivateFiles = results[4] || [];
+                allReports = results[5] || [];
+                allPunishments = results[6] || [];
+                allTitles = results[7] || [];
+                allRegRequests = results[8] || [];
+                allAnnounces = results[9] || [];
+                renderAnnouncementBar();
+            } catch (e) {
+                console.error('加载数据失败:', e);
+            }
+        }
+
+        // ========== 公告栏 ==========
+        function renderAnnouncementBar() {
+            var track = document.getElementById('announcementTrack');
+            if (allAnnounces.length === 0) {
+                track.innerHTML = '<div class="item" style="color:#8aa3b8;">暂无公告</div>';
+                track.style.animation = 'none';
+                return;
+            }
+            var html = '';
+            allAnnounces.forEach(function(a) {
+                var timeStr = a.timestamp ? new Date(a.timestamp).toLocaleString() : '';
+                html += '<div class="item">' + a.content + ' <span class="time">' + timeStr + '</span></div>';
+            });
+            allAnnounces.forEach(function(a) {
+                var timeStr = a.timestamp ? new Date(a.timestamp).toLocaleString() : '';
+                html += '<div class="item">' + a.content + ' <span class="time">' + timeStr + '</span></div>';
+            });
+            track.innerHTML = html;
+            var duration = Math.max(allAnnounces.length * 4, 8);
+            track.style.animationDuration = duration + 's';
+            track.style.animation = 'scrollAnnounce ' + duration + 's infinite';
+        }
+
+        // ========== 注册 ==========
+        document.getElementById('registerBtn').addEventListener('click', async function() {
+            var username = document.getElementById('registerUsername').value.trim();
+            var password = document.getElementById('registerPassword').value.trim();
+            if (!username || !password) {
+                document.getElementById('registerMessage').innerHTML =
+                    '<div class="flash flash-error">请输入用户名和密码</div>';
+                return;
+            }
+            try {
+                var result = await apiRequest('/register', 'POST', { username: username, password: password });
+                if (result.success) {
+                    document.getElementById('registerMessage').innerHTML = result.isAdmin ?
+                        '<div class="flash">🎉 首个用户，您已成为管理员！请登录</div>' :
+                        '<div class="flash">注册成功！请登录</div>';
+                    document.getElementById('registerUsername').value = '';
+                    document.getElementById('registerPassword').value = '';
+                    document.getElementById('loginUsername').value = username;
+                    switchPage('pageLogin');
+                } else {
+                    document.getElementById('registerMessage').innerHTML = '<div class="flash flash-error">' + (result
+                        .error || '注册失败') + '</div>';
+                }
+            } catch (e) {
+                document.getElementById('registerMessage').innerHTML = '<div class="flash flash-error">注册失败，请重试</div>';
+            }
+        });
+
+        // ========== 登录 ==========
+        document.getElementById('loginBtn').addEventListener('click', async function() {
+            var username = document.getElementById('loginUsername').value.trim();
+            var password = document.getElementById('loginPassword').value.trim();
+            if (!username || !password) {
+                document.getElementById('authMessage').innerHTML =
+                    '<div class="flash flash-error">请输入用户名和密码</div>';
+                return;
+            }
+            try {
+                var result = await apiRequest('/login', 'POST', { username: username, password: password });
+                if (result.token && result.user) {
+                    setToken(result.token);
+                    currentUser = result.user;
+                    await loadAllData();
+                    updateUIForLogin();
+                    document.getElementById('authMessage').innerHTML = '<div class="flash">登录成功</div>';
+                    switchPage('pageHome');
+                } else {
+                    document.getElementById('authMessage').innerHTML = '<div class="flash flash-error">' + (result
+                        .error || '登录失败') + '</div>';
+                }
+            } catch (e) {
+                document.getElementById('authMessage').innerHTML = '<div class="flash flash-error">登录失败，请重试</div>';
+            }
+        });
+
+        // ========== 登出 ==========
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            setToken(null);
+            currentUser = null;
+            updateUIForLogout();
+            switchPage('pageHome');
+            document.getElementById('authMessage').innerHTML = '';
+        });
+
+        // ========== 更新个人信息 ==========
+        document.getElementById('updateProfileBtn').addEventListener('click', async function() {
+            if (!currentUser) {
+                document.getElementById('profileMessage').textContent = '请先登录';
+                document.getElementById('profileMessage').style.color = '#b13e3e';
+                return;
+            }
+            var newName = document.getElementById('editUsername').value.trim();
+            var newPass = document.getElementById('editPassword').value.trim();
+            if (!newName && !newPass) {
+                document.getElementById('profileMessage').textContent = '请至少输入一项修改内容';
+                document.getElementById('profileMessage').style.color = '#b13e3e';
+                return;
+            }
+            try {
+                var users = await apiRequest('/users');
+                var target = users.find(function(u) { return u.id === currentUser.id; });
+                if (!target) {
+                    document.getElementById('profileMessage').textContent = '用户不存在';
+                    document.getElementById('profileMessage').style.color = '#b13e3e';
+                    return;
+                }
+                if (newName && newName !== currentUser.username) {
+                    if (users.some(function(u) { return u.username === newName && u.id !== currentUser.id; })) {
+                        document.getElementById('profileMessage').textContent = '用户名已被占用';
+                        document.getElementById('profileMessage').style.color = '#b13e3e';
+                        return;
+                    }
+                    target.username = newName;
+                    currentUser.username = newName;
+                }
+                if (newPass) {
+                    target.password = newPass;
+                }
+                await apiRequest('/users/' + currentUser.id, 'PUT', { username: target.username, password: target
+                        .password });
+                await loadAllData();
+                updateUIAfterProfileChange();
+                document.getElementById('profileMessage').textContent = '更新成功';
+                document.getElementById('profileMessage').style.color = '#1f7b4d';
+            } catch (e) {
+                document.getElementById('profileMessage').textContent = '更新失败，请重试';
+                document.getElementById('profileMessage').style.color = '#b13e3e';
+            }
+        });
+
+        // ========== UI 更新 ==========
+        function updateUIForLogin() {
+            document.getElementById('navLogin').classList.add('hidden');
+            document.getElementById('navRegister').classList.add('hidden');
+            document.getElementById('navProfile').classList.remove('hidden');
+            document.getElementById('navUserList').classList.remove('hidden');
+            document.getElementById('logoutBtn').classList.remove('hidden');
+            document.getElementById('navChat').classList.remove('hidden');
+
+            var isAdmin = currentUser.isAdmin === true;
+            ['navRequests', 'navAnnounce', 'navCreateUser', 'navAssignLeader', 'navReports', 'navPunish', 'navTitles',
+                'navDivider1'
+            ].forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) {
+                    if (isAdmin) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                }
+            });
+
+            document.getElementById('userNameDisplay').textContent = currentUser.username;
+            document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
+
+            renderUserList();
+            renderDiscussions();
+            renderPublicFiles();
+            renderPrivateFiles();
+            renderTeamList();
+            renderReports();
+            renderPunishments();
+            renderTitles();
+            renderChat();
+            populateLeaderSelect();
+        }
+
+        function updateUIForLogout() {
+            document.getElementById('navLogin').classList.remove('hidden');
+            document.getElementById('navRegister').classList.remove('hidden');
+            document.getElementById('navProfile').classList.add('hidden');
+            document.getElementById('navUserList').classList.add('hidden');
+            document.getElementById('logoutBtn').classList.add('hidden');
+            document.getElementById('navChat').classList.add('hidden');
+            ['navRequests', 'navAnnounce', 'navCreateUser', 'navAssignLeader', 'navReports', 'navPunish', 'navTitles',
+                'navDivider1'
+            ].forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            document.getElementById('userNameDisplay').textContent = '未登录';
+            document.getElementById('userAvatar').textContent = '?';
+        }
+
+        function updateUIAfterProfileChange() {
+            document.getElementById('userNameDisplay').textContent = currentUser.username;
+            document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
+            renderUserList();
+            renderDiscussions();
+            renderPublicFiles();
+            renderPrivateFiles();
+            renderTeamList();
+            renderChat();
+            document.getElementById('editUsername').value = '';
+            document.getElementById('editPassword').value = '';
+        }
+
+        // ========== 自动登录 ==========
+        async function autoLogin() {
+            var token = getToken();
+            if (!token) return false;
+            try {
+                var result = await apiRequest('/auto-login', 'POST');
+                if (result.success && result.user) {
+                    currentUser = result.user;
+                    if (result.token) setToken(result.token);
+                    await loadAllData();
+                    updateUIForLogin();
+                    switchPage('pageHome');
+                    return true;
+                }
+            } catch (e) {
+                setToken(null);
+            }
+            return false;
+        }
+
+        // ========== 用户列表 ==========
+        function renderUserList() {
+            if (!currentUser) return;
+            var isAdmin = currentUser.isAdmin === true;
+            document.getElementById('userCount').textContent = allUsers.length;
+
+            var html = '';
+            allUsers.forEach(function(u) {
+                var isSelf = u.id === currentUser.id;
+                var isAdminUser = u.isAdmin === true;
+                var isLeader = u.isLeader === true;
+                var title = allTitles.find(function(t) { return t.username === u.username; });
+                var label = isAdminUser ? '👑 管理员' : (isLeader ? '⭐ 组长' : '👤 用户');
+
+                var actionBtns = '';
+                if (isAdmin && !isSelf && !isAdminUser) {
+                    actionBtns += '<button class="btn btn-danger btn-sm" onclick="deleteUser(\'' + u.id +
+                        '\')" style="padding:0 8px; font-size:11px;">删除</button>';
+                    if (isLeader) {
+                        actionBtns += '<button class="btn btn-warning btn-sm" onclick="toggleLeader(\'' + u.id +
+                            '\')" style="padding:0 8px; font-size:11px;">取消组长</button>';
+                    } else {
+                        actionBtns += '<button class="btn btn-success btn-sm" onclick="toggleLeader(\'' + u.id +
+                            '\')" style="padding:0 8px; font-size:11px;">设为组长</button>';
+                    }
+                } else if (isAdmin && isSelf) {
+                    actionBtns = '<span style="opacity:0.5; font-size:12px;">(自己)</span>';
+                } else if (isAdmin && isAdminUser && !isSelf) {
+                    actionBtns = '<span style="opacity:0.5; font-size:12px;">管理员</span>';
+                }
+
+                html += '<li class="list-item">' +
+                    '<div class="main">' +
+                    '<span class="name">' + u.username + '</span>' +
+                    (title ? '<span class="title-tag">🏅 ' + title.title + '</span>' : '') +
+                    '<span class="tag">' + label + '</span>' +
+                    '</div>' +
+                    '<div class="actions">' + actionBtns + '</div>' +
+                    '</li>';
+            });
+            document.getElementById('userList').innerHTML = html || '<li class="empty">暂无用户</li>';
+        }
+
+        window.deleteUser = async function(userId) {
+            if (!confirm('确定删除此用户吗？')) return;
+            await apiRequest('/users/' + userId, 'DELETE');
+            await loadAllData();
+            renderUserList();
+        };
+
+        window.toggleLeader = async function(userId) {
+            var user = allUsers.find(function(u) { return u.id === userId; });
+            if (!user) return;
+            await apiRequest('/users/' + userId, 'PUT', { isLeader: !user.isLeader });
+            await loadAllData();
+            renderUserList();
+        };
+
+        // ========== 讨论区 ==========
+        function renderDiscussions() {
+            var isLoggedIn = currentUser !== null;
+            if (!isLoggedIn) {
+                document.getElementById('discussLoginRequired').classList.remove('hidden');
+                document.getElementById('discussContent').classList.add('hidden');
+                return;
+            }
+            document.getElementById('discussLoginRequired').classList.add('hidden');
+            document.getElementById('discussContent').classList.remove('hidden');
+            document.getElementById('discussCount').textContent = allDiscussions.length;
+
+            if (allDiscussions.length === 0) {
+                document.getElementById('discussList').innerHTML = '<div class="empty">暂无讨论</div>';
+                return;
+            }
+
+            var html = '';
+            var sorted = allDiscussions.slice().sort(function(a, b) { return b.timestamp - a.timestamp; });
+            sorted.forEach(function(post) {
+                var isAuthor = post.author === currentUser.username;
+                var canWithdraw = isAuthor && (Date.now() - post.timestamp < 60000);
+                var title = allTitles.find(function(t) { return t.username === post.author; });
+                var isLiked = post.likes && post.likes.indexOf(currentUser.username) !== -1;
+                var likeCount = post.likes ? post.likes.length : 0;
+                var replyCount = post.replies ? post.replies.length : 0;
+
+                html += '<div class="discuss-item" data-post-id="' + post.id + '">' +
+                    '<div class="discuss-header">' +
+                    '<span class="author">' + post.author + (title ? '<span class="title-badge">' + title.title +
+                        '</span>' : '') + '</span>' +
+                    '<span class="time">' + new Date(post.timestamp).toLocaleString() + '</span>' +
+                    '</div>' +
+                    '<div class="discuss-content">' + post.content + '</div>' +
+                    '<div class="discuss-actions">' +
+                    '<button class="like-btn' + (isLiked ? ' active' : '') + '" onclick="toggleLike(\'' + post.id +
+                    '\')">❤️ ' + (likeCount > 0 ? likeCount : '') + '</button>' +
+                    '<button onclick="toggleReply(\'' + post.id + '\')">💬 ' + (replyCount > 0 ? replyCount :
+                    '') + ' 回复</button>' +
+                    (canWithdraw && !post.withdrawn ? '<button onclick="withdrawPost(\'' + post.id +
+                        '\')" style="color:#b13e3e;">撤回</button>' : '') +
+                    (post.withdrawn ? '<span class="withdrawn">(已撤回)</span>' : '') +
+                    (!post.withdrawn && !isAuthor ? '<button onclick="openReportModal(\'' + post.id +
+                        '\')" style="color:#b8860b;">举报</button>' : '') +
+                    (currentUser && currentUser.isAdmin && !post.withdrawn ? '<button onclick="deletePost(\'' +
+                        post.id + '\')" style="color:#b13e3e;">删除</button>' : '') +
+                    '</div>' +
+                    '<div class="reply-area" id="replyArea_' + post.id + '" style="display:none;">' +
+                    '<div class="reply-input-area">' +
+                    '<input type="text" id="replyInput_' + post.id + '" placeholder="写下你的回复...">' +
+                    '<button class="btn btn-primary btn-sm" onclick="postReply(\'' + post.id + '\')">回复</button>' +
+                    '</div>' +
+                    '<div id="replyList_' + post.id + '">' +
+                    (post.replies && post.replies.length > 0 ? post.replies.map(function(r) {
+                        return '<div class="reply-item">' +
+                            '<span class="reply-author">' + r.author + '</span>' +
+                            '<span class="reply-time">' + new Date(r.timestamp).toLocaleString() +
+                            '</span>' +
+                            '<div style="margin-top:2px;">' + r.content + '</div>' +
+                            '</div>';
+                    }).join('') : '') +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+            });
+            document.getElementById('discussList').innerHTML = html;
+        }
+
+        window.toggleLike = async function(postId) {
+            if (!currentUser) { alert('请先登录'); return; }
+            var post = allDiscussions.find(function(p) { return p.id === postId; });
+            if (!post) return;
+            if (!post.likes) post.likes = [];
+            var idx = post.likes.indexOf(currentUser.username);
+            if (idx > -1) {
+                post.likes.splice(idx, 1);
+            } else {
+                post.likes.push(currentUser.username);
+            }
+            await apiRequest('/discussions/' + postId, 'PUT', { likes: post.likes });
+            await loadAllData();
+            renderDiscussions();
+        };
+
+        window.toggleReply = function(postId) {
+            var area = document.getElementById('replyArea_' + postId);
+            if (area) area.style.display = area.style.display === 'none' ? 'block' : 'none';
+        };
+
+        window.postReply = async function(postId) {
+            if (!currentUser) { alert('请先登录'); return; }
+            var input = document.getElementById('replyInput_' + postId);
+            if (!input) return;
+            var content = input.value.trim();
+            if (!content) { alert('请输入回复内容'); return; }
+            var post = allDiscussions.find(function(p) { return p.id === postId; });
+            if (!post) return;
+            if (!post.replies) post.replies = [];
+            post.replies.push({ author: currentUser.username, content: content, timestamp: Date.now() });
+            await apiRequest('/discussions/' + postId, 'PUT', { replies: post.replies });
+            await loadAllData();
+            renderDiscussions();
+            document.getElementById('replyArea_' + postId).style.display = 'block';
+        };
+
+        window.withdrawPost = async function(postId) {
+            var post = allDiscussions.find(function(p) { return p.id === postId; });
+            if (!post) return;
+            if (post.author !== currentUser.username) { alert('只能撤回自己的帖子'); return; }
+            if (Date.now() - post.timestamp > 60000) { alert('超过1分钟，无法撤回'); return; }
+            post.withdrawn = true;
+            await apiRequest('/discussions/' + postId, 'PUT', { withdrawn: true });
+            await loadAllData();
+            renderDiscussions();
+        };
+
+        window.deletePost = async function(postId) {
+            if (!currentUser || !currentUser.isAdmin) { alert('仅管理员可删除'); return; }
+            if (!confirm('确定删除此帖子吗？')) return;
+            await apiRequest('/discussions/' + postId, 'DELETE');
+            await loadAllData();
+            renderDiscussions();
+        };
+
+        window.openReportModal = function(postId) {
+            document.getElementById('reportReasonInput').value = '';
+            document.getElementById('reportModalMsg').innerHTML = '';
+            document.getElementById('reportModal').dataset.postId = postId;
+            document.getElementById('reportModal').classList.add('active');
+        };
+
+        document.getElementById('reportModalCancel').addEventListener('click', function() {
+            this.closest('.modal-overlay').classList.remove('active');
+        });
+
+        document.getElementById('reportModalConfirm').addEventListener('click', async function() {
+            var postId = document.getElementById('reportModal').dataset.postId;
+            var reason = document.getElementById('reportReasonInput').value.trim();
+            if (!reason) {
+                document.getElementById('reportModalMsg').innerHTML =
+                    '<div class="flash flash-error">请填写举报原因</div>';
+                return;
+            }
+            var post = allDiscussions.find(function(p) { return p.id === postId; });
+            if (!post) return;
+            await apiRequest('/reports', 'POST', {
+                postId: postId,
+                postAuthor: post.author,
+                postContent: post.content,
+                reporter: currentUser.username,
+                reason: reason
+            });
+            await loadAllData();
+            document.getElementById('reportModalMsg').innerHTML = '<div class="flash">举报已提交</div>';
+            setTimeout(function() {
+                document.getElementById('reportModal').classList.remove('active');
+            }, 1500);
+        });
+
+        document.getElementById('postDiscussBtn').addEventListener('click', async function() {
+            if (!currentUser) { alert('请先登录'); return; }
+            var content = document.getElementById('discussInput').value.trim();
+            if (!content) { alert('请输入内容'); return; }
+            await apiRequest('/discussions', 'POST', {
+                author: currentUser.username,
+                content: content,
+                likes: [],
+                replies: []
+            });
+            await loadAllData();
+            document.getElementById('discussInput').value = '';
+            renderDiscussions();
+        });
+
+        document.getElementById('refreshDiscussBtn').addEventListener('click', async function() {
+            await loadAllData();
+            renderDiscussions();
+            renderPublicFiles();
+            renderPrivateFiles();
+        });
+
+        // ========== 公共文件 ==========
+        function renderPublicFiles() {
+            var isLoggedIn = currentUser !== null;
+            document.getElementById('publicFileCount').textContent = allPublicFiles.length;
+
+            if (!isLoggedIn) {
+                document.getElementById('homePublicLoginRequired').classList.remove('hidden');
+                document.getElementById('homePublicFileList').classList.add('hidden');
+                document.getElementById('publicFileList').innerHTML = '<li class="empty">请先登录</li>';
+                return;
+            }
+
+            document.getElementById('homePublicLoginRequired').classList.add('hidden');
+            document.getElementById('homePublicFileList').classList.remove('hidden');
+
+            if (allPublicFiles.length === 0) {
+                document.getElementById('publicFileList').innerHTML = '<li class="empty">暂无公共文件</li>';
+                document.getElementById('homePublicFileList').innerHTML = '<li class="empty">暂无公共文件</li>';
+                return;
+            }
+
+            var isAdmin = currentUser.isAdmin === true;
+            var isLeader = allUsers.find(function(u) { return u.id === currentUser.id; });
+            var canUpload = isAdmin || (isLeader && isLeader.isLeader === true);
+
+            var html = '';
+            allPublicFiles.forEach(function(f) {
+                html += '<li class="list-item">' +
+                    '<span>📄 ' + f.name + '</span>' +
+                    '<div class="actions">' +
+                    '<button class="btn btn-primary btn-sm" onclick="downloadPublicFile(\'' + f.id +
+                    '\')">下载</button>' +
+                    (canUpload ? '<button class="btn btn-danger btn-sm" onclick="deletePublicFile(\'' + f.id +
+                        '\')">删除</button>' : '') +
+                    '</div>' +
+                    '</li>';
+            });
+            document.getElementById('publicFileList').innerHTML = html;
+            document.getElementById('homePublicFileList').innerHTML = html;
+        }
+
+        window.downloadPublicFile = function(fileId) {
+            var file = allPublicFiles.find(function(f) { return f.id === fileId; });
+            if (!file) { alert('文件不存在'); return; }
+            if (!file.data) { alert('文件数据不存在'); return; }
+            var a = document.createElement('a');
+            a.href = file.data;
+            a.download = file.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        };
+
+        window.deletePublicFile = async function(fileId) {
+            if (!confirm('确定删除此文件吗？')) return;
+            await apiRequest('/public-files/' + fileId, 'DELETE');
+            await loadAllData();
+            renderPublicFiles();
+        };
+
+        document.getElementById('uploadPublicBtn').addEventListener('click', async function() {
+            if (!currentUser) {
+                document.getElementById('uploadMessage').innerHTML = '<div class="flash flash-error">请先登录</div>';
+                return;
+            }
+            var input = document.getElementById('publicFileInput');
+            if (!input.files || input.files.length === 0) {
+                document.getElementById('uploadMessage').innerHTML = '<div class="flash flash-error">请选择文件</div>';
+                return;
+            }
+            var isAdmin = currentUser.isAdmin === true;
+            var isLeader = allUsers.find(function(u) { return u.id === currentUser.id; });
+            if (!isAdmin && !(isLeader && isLeader.isLeader === true)) {
+                document.getElementById('uploadMessage').innerHTML =
+                    '<div class="flash flash-error">仅管理员或组长可上传</div>';
+                return;
+            }
+            var count = 0;
+            Array.from(input.files).forEach(function(file) {
+                var reader = new FileReader();
+                reader.onload = async function(e) {
+                    await apiRequest('/public-files', 'POST', {
+                        name: file.name,
+                        data: e.target.result
+                    });
+                    count++;
+                    if (count === input.files.length) {
+                        await loadAllData();
+                        renderPublicFiles();
+                        input.value = '';
+                        document.getElementById('uploadMessage').innerHTML =
+                            '<div class="flash">成功上传 ' + count + ' 个文件</div>';
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        // ========== 私密文件 ==========
+        function renderPrivateFiles() {
+            var isLoggedIn = currentUser !== null;
+            if (!isLoggedIn) {
+                document.getElementById('privateLoginRequired').classList.remove('hidden');
+                document.getElementById('privateFileContent').classList.add('hidden');
+                return;
+            }
+            document.getElementById('privateLoginRequired').classList.add('hidden');
+            document.getElementById('privateFileContent').classList.remove('hidden');
+            document.getElementById('privateFileCount').textContent = allPrivateFiles.length;
+
+            var isAdmin = currentUser.isAdmin === true;
+            var visibleFiles = allPrivateFiles;
+            if (!isAdmin) {
+                visibleFiles = allPrivateFiles.filter(function(f) {
+                    return f.allowedUsers && f.allowedUsers.indexOf(currentUser.username) !== -1;
+                });
+            }
+
+            if (visibleFiles.length === 0) {
+                document.getElementById('privateFileList').innerHTML = '<li class="empty">暂无私密文件</li>';
+                return;
+            }
+
+            var html = '';
+            visibleFiles.forEach(function(f) {
+                html += '<li class="list-item">' +
+                    '<span class="main">' +
+                    '<span class="name">📄 ' + f.name + '</span>' +
+                    '<span class="private-tag">🔒 私密</span>' +
+                    (isAdmin ? '<span style="font-size:11px; color:#7a8a9e;">(可查看: ' + (f.allowedUsers ? f
+                        .allowedUsers.join(', ') : '无') + ')</span>' : '') +
+                    '</span>' +
+                    '<div class="actions">' +
+                    '<button class="btn btn-primary btn-sm" onclick="downloadPrivateFile(\'' + f.id +
+                    '\')">下载</button>' +
+                    (isAdmin ? '<button class="btn btn-warning btn-sm" onclick="editPrivateFile(\'' + f.id +
+                        '\')">权限</button>' : '') +
+                    (isAdmin ? '<button class="btn btn-danger btn-sm" onclick="deletePrivateFile(\'' + f.id +
+                        '\')">删除</button>' : '') +
+                    '</div>' +
+                    '</li>';
+            });
+            document.getElementById('privateFileList').innerHTML = html;
+        }
+
+        window.downloadPrivateFile = function(fileId) {
+            var file = allPrivateFiles.find(function(f) { return f.id === fileId; });
+            if (!file) { alert('文件不存在'); return; }
+            if (!file.data) { alert('文件数据不存在'); return; }
+            var a = document.createElement('a');
+            a.href = file.data;
+            a.download = file.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        };
+
+        window.deletePrivateFile = async function(fileId) {
+            if (!currentUser || !currentUser.isAdmin) { alert('仅管理员可操作'); return; }
+            if (!confirm('确定删除吗？')) return;
+            await apiRequest('/private-files/' + fileId, 'DELETE');
+            await loadAllData();
+            renderPrivateFiles();
+        };
+
+        window.editPrivateFile = function(fileId) {
+            var file = allPrivateFiles.find(function(f) { return f.id === fileId; });
+            if (!file) return;
+            var modal = document.getElementById('privateFileModal');
+            document.getElementById('privateFileModalTitle').textContent = '设置 "' + file.name + '" 的查看权限';
+            var list = document.getElementById('privateUserCheckboxList');
+            var html = '';
+            allUsers.forEach(function(u) {
+                if (u.username === currentUser.username) return;
+                var checked = file.allowedUsers && file.allowedUsers.indexOf(u.username) !== -1 ? 'checked' :
+                '';
+                html += '<label><input type="checkbox" value="' + u.username + '" ' + checked + '> ' + u
+                    .username + '</label>';
+            });
+            list.innerHTML = html;
+            modal.dataset.fileId = fileId;
+            modal.classList.add('active');
+        };
+
+        document.getElementById('privateFileModalCancel').addEventListener('click', function() {
+            this.closest('.modal-overlay').classList.remove('active');
+        });
+
+        document.getElementById('privateFileModalConfirm').addEventListener('click', async function() {
+            var fileId = document.getElementById('privateFileModal').dataset.fileId;
+            var checkboxes = document.querySelectorAll('#privateUserCheckboxList input[type="checkbox"]');
+            var allowedUsers = [];
+            checkboxes.forEach(function(cb) {
+                if (cb.checked) allowedUsers.push(cb.value);
+            });
+            allowedUsers.push(currentUser.username);
+            await apiRequest('/private-files/' + fileId, 'PUT', { allowedUsers: allowedUsers });
+            await loadAllData();
+            renderPrivateFiles();
+            document.getElementById('privateFileModal').classList.remove('active');
+            document.getElementById('privateUploadMsg').innerHTML = '<div class="flash">权限已更新</div>';
+        });
+
+        document.getElementById('uploadPrivateBtn').addEventListener('click', async function() {
+            if (!currentUser || !currentUser.isAdmin) {
+                document.getElementById('privateUploadMsg').innerHTML =
+                    '<div class="flash flash-error">仅管理员可上传私密文件</div>';
+                return;
+            }
+            var input = document.getElementById('privateFileInput');
+            if (!input.files || input.files.length === 0) {
+                document.getElementById('privateUploadMsg').innerHTML =
+                    '<div class="flash flash-error">请选择文件</div>';
+                return;
+            }
+            var allUserNames = allUsers.map(function(u) { return u.username; });
+            var count = 0;
+            Array.from(input.files).forEach(function(file) {
+                var reader = new FileReader();
+                reader.onload = async function(e) {
+                    await apiRequest('/private-files', 'POST', {
+                        name: file.name,
+                        data: e.target.result,
+                        allowedUsers: allUserNames
+                    });
+                    count++;
+                    if (count === input.files.length) {
+                        await loadAllData();
+                        renderPrivateFiles();
+                        input.value = '';
+                        document.getElementById('privateUploadMsg').innerHTML =
+                            '<div class="flash">成功上传 ' + count + ' 个私密文件</div>';
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        // ========== 团队 ==========
+        function renderTeamList() {
+            var isLoggedIn = currentUser !== null;
+            if (!isLoggedIn) {
+                document.getElementById('teamLoginRequired').classList.remove('hidden');
+                document.getElementById('teamLoggedInContent').classList.add('hidden');
+                return;
+            }
+            document.getElementById('teamLoginRequired').classList.add('hidden');
+            document.getElementById('teamLoggedInContent').classList.remove('hidden');
+
+            var search = document.getElementById('teamSearchInput').value.toLowerCase();
+            var filterTab = document.querySelector('#filterTabs .tab.active');
+            var filter = filterTab ? filterTab.dataset.filter : 'all';
+
+            var filtered = allTeams.filter(function(t) {
+                var matchSearch = t.name.toLowerCase().indexOf(search) !== -1 ||
+                    (t.description && t.description.toLowerCase().indexOf(search) !== -1);
+                var matchFilter = filter === 'all' || t.permission === filter;
+                return matchSearch && matchFilter;
+            });
+
+            if (filtered.length === 0) {
+                document.getElementById('teamGrid').innerHTML =
+                    '<div class="empty" style="grid-column:1/-1;">暂无匹配的团队</div>';
+                return;
+            }
+
+            var permissionMap = { public: '公开团队', protected: '保护团队', private: '私有团队' };
+            var permissionClass = { public: 'public', protected: 'protected', private: 'private' };
+            var lockMap = { public: '🌐', protected: '🔒', private: '🔐' };
+
+            var html = '';
+            filtered.forEach(function(team) {
+                var memberCount = team.members ? team.members.length : 0;
+                html += '<div class="team-card" onclick="showTeamDetail(\'' + team.id + '\')">' +
+                    '<div class="team-name">' +
+                    team.name +
+                    '<span class="lock">' + (lockMap[team.permission] || '') + '</span>' +
+                    '</div>' +
+                    '<div class="team-desc">' + (team.description || '暂无描述') + '</div>' +
+                    '<div class="team-meta">' +
+                    '<span class="owner">' +
+                    '<span class="avatar-sm">' + team.owner.charAt(0).toUpperCase() + '</span>' +
+                    team.owner +
+                    '</span>' +
+                    '<span class="badge-permission ' + (permissionClass[team.permission] || '') + '">' + (
+                        permissionMap[team.permission] || team.permission) + '</span>' +
+                    '<span class="members">👥 ' + memberCount + ' 人</span>' +
+                    '<span class="date">© ' + team.created + '</span>' +
+                    '</div>' +
+                    '</div>';
+            });
+            document.getElementById('teamGrid').innerHTML = html;
+        }
+
+        window.showTeamDetail = function(teamId) {
+            var team = allTeams.find(function(t) { return t.id === teamId; });
+            if (!team) { alert('团队不存在'); return; }
+
+            switchPage('pageTeamDetail');
+
+            var permissionMap = { public: '公开团队', protected: '保护团队', private: '私有团队' };
+            document.getElementById('detailTeamName').textContent = team.name;
+            document.getElementById('detailTeamOwner').textContent = '负责人: ' + team.owner;
+            document.getElementById('detailTeamPermission').textContent = '权限: ' + (permissionMap[team.permission] || team
+                .permission);
+            document.getElementById('detailTeamCreated').textContent = '创建时间: ' + team.created;
+            document.getElementById('detailTeamId').textContent = '编号: ' + team.id;
+
+            var members = team.members || [];
+            var pendingMembers = team.pendingMembers || [];
+            var allMembers = members.concat(pendingMembers);
+            document.getElementById('detailMemberCount').textContent = '(' + allMembers.length + ')';
+
+            if (allMembers.length === 0) {
+                document.getElementById('detailMemberList').innerHTML =
+                    '<span style="color:#9aa6b5; font-size:13px;">暂无成员</span>';
+            } else {
+                var memberHtml = '';
+                allMembers.forEach(function(m) {
+                    var isLeader = m === team.owner;
+                    var isPending = pendingMembers.indexOf(m) !== -1;
+                    var title = allTitles.find(function(t) { return t.username === m; });
+                    var isLeaderOrAdmin = currentUser && (team.owner === currentUser.username || currentUser
+                        .isAdmin === true);
+
+                    memberHtml += '<div class="member-item">' +
+                        '<span class="avatar-sm">' + m.charAt(0).toUpperCase() + '</span>' +
+                        m +
+                        (title ? '<span class="title-badge-sm">' + title.title + '</span>' : '') +
+                        (isLeader ? '<span class="leader-badge">组长</span>' : '') +
+                        (isPending ? '<span class="status-badge pending">待审批</span>' : '') +
+                        (!isPending && !isLeader ? '<span class="status-badge member">成员</span>' :
+                        '') +
+                        (isLeaderOrAdmin && !isLeader && !isPending && m !== currentUser?.username ?
+                            '<button class="btn btn-danger btn-sm" onclick="kickMember(\'' + team.id +
+                            '\',\'' + m + '\')" style="padding:0 8px; font-size:11px;">踢出</button>' :
+                            '') +
+                        (isLeaderOrAdmin && isPending ? '<button class="btn btn-success btn-sm" onclick="approvePending(\'' +
+                            team.id + '\',\'' + m +
+                            '\')" style="padding:0 8px; font-size:11px;">批准</button>' : '') +
+                        (isLeaderOrAdmin && isPending ? '<button class="btn btn-danger btn-sm" onclick="rejectPending(\'' +
+                            team.id + '\',\'' + m +
+                            '\')" style="padding:0 8px; font-size:11px;">拒绝</button>' : '') +
+                        '</div>';
+                });
+                document.getElementById('detailMemberList').innerHTML = memberHtml;
+            }
+
+            var announcements = team.announcements || [];
+            document.getElementById('detailAnnounceCount').textContent = '(' + announcements.length + ')';
+            if (announcements.length === 0) {
+                document.getElementById('detailAnnounceList').innerHTML =
+                    '<span style="color:#9aa6b5; font-size:13px;">暂无公告</span>';
+            } else {
+                var announceHtml = '';
+                announcements.forEach(function(a) {
+                    announceHtml += '<div class="announce-item">' +
+                        '<div class="content">📢 ' + a + '</div>' +
+                        '<div class="time">' + new Date().toLocaleDateString() + '</div>' +
+                        '</div>';
+                });
+                document.getElementById('detailAnnounceList').innerHTML = announceHtml;
+            }
+
+            var files = team.files || [];
+            document.getElementById('detailFileCount').textContent = '(' + files.length + ')';
+            if (files.length === 0) {
+                document.getElementById('detailFileList').innerHTML =
+                    '<span style="color:#9aa6b5; font-size:13px;">暂无文件</span>';
+            } else {
+                var fileHtml = '';
+                var canDownload = members.indexOf(currentUser?.username) !== -1 || currentUser?.isAdmin || team.owner ===
+                    currentUser?.username;
+                var canDelete = currentUser?.isAdmin || team.owner === currentUser?.username;
+                files.forEach(function(f, idx) {
+                    var isBase64 = f.data && f.data.startsWith && f.data.startsWith('data:');
+                    var displayName = isBase64 ? (f.name || '文件 ' + (idx + 1)) : f;
+                    fileHtml += '<div class="file-item">' +
+                        '<span class="name">📄 ' + displayName + '</span>' +
+                        '<div class="actions">' +
+                        (canDownload ? '<button class="btn btn-primary btn-sm" onclick="downloadTeamFile(\'' +
+                            team.id + '\',' + idx + ')">下载</button>' :
+                            '<span class="access-denied">🔒 仅成员可下载</span>') +
+                        (canDelete ? '<button class="btn btn-danger btn-sm" onclick="deleteTeamFile(\'' +
+                            team.id + '\',' + idx + ')">删除</button>' : '') +
+                        '</div>' +
+                        '</div>';
+                });
+                document.getElementById('detailFileList').innerHTML = fileHtml;
+            }
+
+            var isLeader = currentUser && (team.owner === currentUser.username || currentUser.isAdmin === true);
+            if (isLeader) {
+                document.getElementById('leaderActionsContainer').classList.remove('hidden');
+                if (team.pendingMembers && team.pendingMembers.length > 0) {
+                    document.getElementById('pendingRequestsList').innerHTML = team.pendingMembers.map(function(m) {
+                        return '<span style="display:inline-block; background:#f2f4f8; padding:2px 10px; border-radius:12px; margin:2px;">' +
+                            m +
+                            '<button class="btn btn-success btn-sm" onclick="approvePending(\'' + team.id +
+                            '\',\'' + m +
+                            '\')" style="padding:0 6px; font-size:11px;">✓</button>' +
+                            '<button class="btn btn-danger btn-sm" onclick="rejectPending(\'' + team.id +
+                            '\',\'' + m +
+                            '\')" style="padding:0 6px; font-size:11px;">✕</button>' +
+                            '</span>';
+                    }).join('');
+                } else {
+                    document.getElementById('pendingRequestsList').innerHTML = '暂无待处理申请';
+                }
+
+                document.getElementById('leaderPostAnnounceBtn').onclick = async function() {
+                    var content = document.getElementById('leaderAnnounceInput').value.trim();
+                    if (!content) { alert('请输入公告内容'); return; }
+                    if (!team.announcements) team.announcements = [];
+                    team.announcements.push(content + ' (' + new Date().toLocaleString() + ')');
+                    await apiRequest('/teams/' + team.id, 'PUT', { announcements: team.announcements });
+                    await loadAllData();
+                    showTeamDetail(team.id);
+                };
+
+                document.getElementById('leaderUploadFileBtn').onclick = function() {
+                    var input = document.getElementById('leaderFileInput');
+                    if (!input.files || input.files.length === 0) { alert('请选择文件'); return; }
+                    var file = input.files[0];
+                    var reader = new FileReader();
+                    reader.onload = async function(e) {
+                        if (!team.files) team.files = [];
+                        team.files.push({ name: file.name, data: e.target.result });
+                        await apiRequest('/teams/' + team.id, 'PUT', { files: team.files });
+                        await loadAllData();
+                        showTeamDetail(team.id);
+                        alert('文件上传成功');
+                    };
+                    reader.readAsDataURL(file);
+                };
+            } else {
+                document.getElementById('leaderActionsContainer').classList.add('hidden');
+            }
+
+            var joinBtn = document.getElementById('detailJoinBtn');
+            var deleteBtn = document.getElementById('detailDeleteBtn');
+            var isMember = members.indexOf(currentUser?.username) !== -1;
+            var isPending = team.pendingMembers && team.pendingMembers.indexOf(currentUser?.username) !== -1;
+            var isOwner = team.owner === currentUser?.username;
+
+            if (currentUser) {
+                if (isOwner) {
+                    joinBtn.textContent = '👑 组长';
+                    joinBtn.disabled = true;
+                    joinBtn.style.opacity = '0.6';
+                } else if (isMember) {
+                    joinBtn.textContent = '✅ 已加入';
+                    joinBtn.disabled = true;
+                    joinBtn.style.opacity = '0.6';
+                } else if (isPending) {
+                    joinBtn.textContent = '⏳ 等待审批';
+                    joinBtn.disabled = true;
+                    joinBtn.style.opacity = '0.6';
+                } else {
+                    joinBtn.textContent = '申请加入';
+                    joinBtn.disabled = false;
+                    joinBtn.style.opacity = '1';
+                    joinBtn.onclick = function() {
+                        openJoinModal(team);
+                    };
+                }
+
+                if (isLeader) {
+                    deleteBtn.classList.remove('hidden');
+                    deleteBtn.onclick = async function() {
+                        if (confirm('确定删除此团队吗？')) {
+                            await apiRequest('/teams/' + team.id, 'DELETE');
+                            await loadAllData();
+                            switchPage('pageTeams');
+                            renderTeamList();
+                        }
+                    };
+                } else {
+                    deleteBtn.classList.add('hidden');
+                }
+            } else {
+                joinBtn.textContent = '请先登录';
+                joinBtn.disabled = true;
+                joinBtn.style.opacity = '0.6';
+                deleteBtn.classList.add('hidden');
+            }
+        };
+
+        window.kickMember = async function(teamId, username) {
+            if (!confirm('确定踢出 "' + username + '" 吗？')) return;
+            var team = allTeams.find(function(t) { return t.id === teamId; });
+            if (!team) return;
+            team.members = team.members.filter(function(m) { return m !== username; });
+            if (team.pendingMembers) team.pendingMembers = team.pendingMembers.filter(function(m) { return m !==
+                username; });
+            await apiRequest('/teams/' + teamId, 'PUT', { members: team.members, pendingMembers: team.pendingMembers });
+            await loadAllData();
+            showTeamDetail(teamId);
+        };
+
+        window.approvePending = async function(teamId, username) {
+            var team = allTeams.find(function(t) { return t.id === teamId; });
+            if (!team) return;
+            if (!team.pendingMembers) team.pendingMembers = [];
+            team.pendingMembers = team.pendingMembers.filter(function(m) { return m !== username; });
+            if (!team.members) team.members = [];
+            team.members.push(username);
+            await apiRequest('/teams/' + teamId, 'PUT', { members: team.members, pendingMembers: team.pendingMembers });
+            await loadAllData();
+            showTeamDetail(teamId);
+        };
+
+        window.rejectPending = async function(teamId, username) {
+            if (!confirm('拒绝 "' + username + '" 的申请吗？')) return;
+            var team = allTeams.find(function(t) { return t.id === teamId; });
+            if (!team) return;
+            if (!team.pendingMembers) team.pendingMembers = [];
+            team.pendingMembers = team.pendingMembers.filter(function(m) { return m !== username; });
+            await apiRequest('/teams/' + teamId, 'PUT', { pendingMembers: team.pendingMembers });
+            await loadAllData();
+            showTeamDetail(teamId);
+        };
+
+        window.downloadTeamFile = function(teamId, fileIndex) {
+            var team = allTeams.find(function(t) { return t.id === teamId; });
+            if (!team || !team.files || !team.files[fileIndex]) { alert('文件不存在'); return; }
+            var file = team.files[fileIndex];
+            if (!file.data) { alert('文件数据不存在'); return; }
+            var a = document.createElement('a');
+            a.href = file.data;
+            a.download = file.name || 'download';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        };
+
+        window.deleteTeamFile = async function(teamId, fileIndex) {
+            if (!confirm('确定删除此文件吗？')) return;
+            var team = allTeams.find(function(t) { return t.id === teamId; });
+            if (!team || !team.files) return;
+            team.files.splice(fileIndex, 1);
+            await apiRequest('/teams/' + teamId, 'PUT', { files: team.files });
+            await loadAllData();
+            showTeamDetail(teamId);
+        };
+
+        function openJoinModal(team) {
+            var modal = document.getElementById('joinModal');
+            document.getElementById('joinModalTitle').textContent = '申请加入 "' + team.name + '"';
+            document.getElementById('joinModalDesc').textContent = '请输入所需信息提交入团申请';
+            document.getElementById('joinPwdRow').classList.toggle('hidden', team.permission !== 'protected' && team
+                .permission !== 'private');
+            document.getElementById('joinInviteRow').classList.toggle('hidden', team.permission !== 'private');
+            document.getElementById('joinPwdInput').value = '';
+            document.getElementById('joinInviteInput').value = '';
+            document.getElementById('joinModalMsg').innerHTML = '';
+            modal.dataset.teamId = team.id;
+            modal.classList.add('active');
+        }
+
+        document.getElementById('joinModalCancel').addEventListener('click', function() {
+            this.closest('.modal-overlay').classList.remove('active');
+        });
+
+        document.getElementById('joinModalConfirm').addEventListener('click', async function() {
+            var teamId = document.getElementById('joinModal').dataset.teamId;
+            var team = allTeams.find(function(t) { return t.id === teamId; });
+            if (!team) return;
+
+            var permission = team.permission;
+            if (permission === 'protected') {
+                var pwd = document.getElementById('joinPwdInput').value.trim();
+                if (!pwd) {
+                    document.getElementById('joinModalMsg').innerHTML =
+                        '<div class="flash flash-error">请输入团队密码</div>';
+                    return;
+                }
+                if (team.password !== pwd) {
+                    document.getElementById('joinModalMsg').innerHTML =
+                        '<div class="flash flash-error">密码错误</div>';
+                    return;
+                }
+            }
+
+            if (permission === 'private') {
+                var pwd = document.getElementById('joinPwdInput').value.trim();
+                var invite = document.getElementById('joinInviteInput').value.trim();
+                if (!pwd) {
+                    document.getElementById('joinModalMsg').innerHTML =
+                        '<div class="flash flash-error">请输入团队密码</div>';
+                    return;
+                }
+                if (!invite) {
+                    document.getElementById('joinModalMsg').innerHTML =
+                        '<div class="flash flash-error">请输入邀请码</div>';
+                    return;
+                }
+                if (team.password !== pwd) {
+                    document.getElementById('joinModalMsg').innerHTML =
+                        '<div class="flash flash-error">密码错误</div>';
+                    return;
+                }
+                if (team.inviteCode !== invite) {
+                    document.getElementById('joinModalMsg').innerHTML =
+                        '<div class="flash flash-error">邀请码错误</div>';
+                    return;
+                }
+            }
+
+            if (!team.pendingMembers) team.pendingMembers = [];
+            if (team.members && team.members.indexOf(currentUser.username) !== -1) {
+                document.getElementById('joinModalMsg').innerHTML = '<div class="flash">您已是团队成员</div>';
+                return;
+            }
+            if (team.pendingMembers.indexOf(currentUser.username) !== -1) {
+                document.getElementById('joinModalMsg').innerHTML = '<div class="flash">已提交过申请</div>';
+                return;
+            }
+            team.pendingMembers.push(currentUser.username);
+            await apiRequest('/teams/' + teamId, 'PUT', { pendingMembers: team.pendingMembers });
+            await loadAllData();
+            document.getElementById('joinModal').classList.remove('active');
+            alert('入团申请已提交！');
+            showTeamDetail(teamId);
+        });
+
+        document.getElementById('createTeamFromListBtn').addEventListener('click', async function() {
+            if (!currentUser) { alert('请先登录'); return; }
+            var name = prompt('请输入团队名称：');
+            if (!name || name.trim() === '') { alert('团队名称不能为空'); return; }
+            var desc = prompt('请输入团队描述（可选）：') || '';
+            var permChoice = prompt(
+                '请选择团队权限：\n1. public - 公开团队\n2. protected - 保护团队（需要密码）\n3. private - 私有团队（密码+邀请码）\n\n请输入数字 1/2/3：'
+            );
+            var permission = 'public';
+            if (permChoice === '2') permission = 'protected';
+            else if (permChoice === '3') permission = 'private';
+
+            var password = '';
+            var inviteCode = '';
+            if (permission === 'protected' || permission === 'private') {
+                password = prompt('请设置团队密码：');
+                if (!password || password.trim() === '') { alert('密码不能为空'); return; }
+            }
+            if (permission === 'private') {
+                inviteCode = prompt('请设置邀请码：');
+                if (!inviteCode || inviteCode.trim() === '') { alert('邀请码不能为空'); return; }
+            }
+
+            var newTeam = {
+                name: name.trim(),
+                description: desc,
+                owner: currentUser.username,
+                permission: permission,
+                password: password,
+                inviteCode: inviteCode,
+                created: new Date().toISOString().slice(0, 10),
+                members: [currentUser.username],
+                pendingMembers: [],
+                announcements: [],
+                files: []
+            };
+
+            await apiRequest('/teams', 'POST', newTeam);
+            await loadAllData();
+            renderTeamList();
+            alert('团队 "' + name + '" 创建成功！');
+        });
+
+        // ========== 搜索和过滤 ==========
+        document.getElementById('teamSearchBtn').addEventListener('click', renderTeamList);
+        document.getElementById('teamSearchInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') renderTeamList();
+        });
+        document.getElementById('teamResetBtn').addEventListener('click', function() {
+            document.getElementById('teamSearchInput').value = '';
+            renderTeamList();
+        });
+        document.querySelectorAll('#filterTabs .tab').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('#filterTabs .tab').forEach(function(t) { t.classList.remove(
+                    'active'); });
+                this.classList.add('active');
+                renderTeamList();
+            });
+        });
+        document.getElementById('backToTeamsBtn').addEventListener('click', function() {
+            switchPage('pageTeams');
+            renderTeamList();
+        });
+
+        // ========== 举报管理 ==========
+        function renderReports() {
+            if (!currentUser || !currentUser.isAdmin) {
+                document.getElementById('reportsList').innerHTML = '<div class="empty">仅管理员可查看</div>';
+                return;
+            }
+            document.getElementById('reportCount').textContent = allReports.filter(function(r) { return r.status ===
+                'pending'; }).length;
+            if (allReports.length === 0) {
+                document.getElementById('reportsList').innerHTML = '<div class="empty">暂无举报</div>';
+                return;
+            }
+            var statusMap = { pending: '待处理', resolved: '已处理', dismissed: '已驳回' };
+            var html = '';
+            allReports.forEach(function(r) {
+                html += '<div class="report-item">' +
+                    '<div><strong>被举报人:</strong> ' + r.postAuthor + '</div>' +
+                    '<div class="report-content"><strong>内容:</strong> ' + r.postContent + '</div>' +
+                    '<div><strong>举报人:</strong> ' + r.reporter + '</div>' +
+                    '<div><strong>原因:</strong> ' + r.reason + '</div>' +
+                    '<div class="report-meta">' +
+                    '<span>状态: ' + (statusMap[r.status] || r.status) + '</span>' +
+                    '<span>' + new Date(r.timestamp).toLocaleString() + '</span>' +
+                    (r.status === 'pending' ?
+                        '<button class="btn btn-success btn-sm" onclick="resolveReport(\'' + r.id +
+                        '\')">处理</button>' +
+                        '<button class="btn btn-outline btn-sm" onclick="dismissReport(\'' + r.id +
+                        '\')">驳回</button>' :
+                        '') +
+                    (r.status === 'resolved' ? '<span style="color:#1f7b4d;">✅ 已处理</span>' : '') +
+                    (r.status === 'dismissed' ? '<span style="color:#7a8a9e;">已驳回</span>' : '') +
+                    '</div>' +
+                    '</div>';
+            });
+            document.getElementById('reportsList').innerHTML = html;
+        }
+
+        window.resolveReport = async function(reportId) {
+            await apiRequest('/reports/' + reportId, 'PUT', { status: 'resolved' });
+            await loadAllData();
+            renderReports();
+        };
+
+        window.dismissReport = async function(reportId) {
+            await apiRequest('/reports/' + reportId, 'PUT', { status: 'dismissed' });
+            await loadAllData();
+            renderReports();
+        };
+
+        // ========== 惩罚管理 ==========
+        function renderPunishments() {
+            if (!currentUser || !currentUser.isAdmin) {
+                document.getElementById('punishList').innerHTML = '<li class="empty">仅管理员可查看</li>';
+                return;
+            }
+            if (allPunishments.length === 0) {
+                document.getElementById('punishList').innerHTML = '<li class="empty">暂无受罚用户</li>';
+                return;
+            }
+            var actionMap = {
+                ban_discuss: '禁止讨论区发言',
+                ban_download: '禁止下载文件',
+                ban_team: '禁止加入/创建团队',
+                ban_all: '禁止所有操作'
+            };
+            var html = '';
+            allPunishments.forEach(function(p) {
+                html += '<li class="list-item">' +
+                    '<span class="name">' + p.username + '</span>' +
+                    '<span class="tag">' + (actionMap[p.action] || p.action) + '</span>' +
+                    '<span style="font-size:12px; color:#7a8a9e;">' + (p.reason || '无原因') + '</span>' +
+                    '<button class="btn btn-danger btn-sm" onclick="removePunishment(\'' + p.id +
+                    '\')">解除</button>' +
+                    '</li>';
+            });
+            document.getElementById('punishList').innerHTML = html;
+        }
+
+        window.removePunishment = async function(punishId) {
+            if (!confirm('确定解除此用户的惩罚吗？')) return;
+            await apiRequest('/punishments/' + punishId, 'DELETE');
+            await loadAllData();
+            renderPunishments();
+        };
+
+        document.getElementById('applyPunishBtn').addEventListener('click', async function() {
+            if (!currentUser || !currentUser.isAdmin) {
+                document.getElementById('punishMsg').innerHTML =
+                    '<div class="flash flash-error">仅管理员可操作</div>';
+                return;
+            }
+            var username = document.getElementById('punishUsername').value.trim();
+            if (!username) {
+                document.getElementById('punishMsg').innerHTML = '<div class="flash flash-error">请输入用户名</div>';
+                return;
+            }
+            if (!allUsers.find(function(u) { return u.username === username; })) {
+                document.getElementById('punishMsg').innerHTML = '<div class="flash flash-error">用户不存在</div>';
+                return;
+            }
+            if (username === 'admin') {
+                document.getElementById('punishMsg').innerHTML =
+                    '<div class="flash flash-error">不能惩罚管理员</div>';
+                return;
+            }
+            var action = document.getElementById('punishAction').value;
+            var reason = document.getElementById('punishReason').value.trim() || '管理员惩罚';
+            await apiRequest('/punishments', 'POST', { username: username, action: action, reason: reason });
+            await loadAllData();
+            document.getElementById('punishMsg').innerHTML = '<div class="flash">已对 ' + username + ' 执行惩罚</div>';
+            document.getElementById('punishUsername').value = '';
+            document.getElementById('punishReason').value = '';
+            renderPunishments();
+        });
+
+        // ========== 头衔管理 ==========
+        function renderTitles() {
+            if (!currentUser || !currentUser.isAdmin) {
+                document.getElementById('titleList').innerHTML = '<li class="empty">仅管理员可查看</li>';
+                return;
+            }
+            if (allTitles.length === 0) {
+                document.getElementById('titleList').innerHTML = '<li class="empty">暂无头衔</li>';
+                return;
+            }
+            var html = '';
+            allTitles.forEach(function(t) {
+                html += '<li class="list-item">' +
+                    '<span class="name">' + t.username + '</span>' +
+                    '<span class="title-tag">🏅 ' + t.title + '</span>' +
+                    '<button class="btn btn-danger btn-sm" onclick="removeTitle(\'' + t.username +
+                    '\')">移除</button>' +
+                    '</li>';
+            });
+            document.getElementById('titleList').innerHTML = html;
+        }
+
+        window.removeTitle = async function(username) {
+            if (!confirm('确定移除该用户头衔吗？')) return;
+            await apiRequest('/titles/' + username, 'DELETE');
+            await loadAllData();
+            renderTitles();
+            renderUserList();
+        };
+
+        document.getElementById('setTitleBtn').addEventListener('click', async function() {
+            if (!currentUser || !currentUser.isAdmin) {
+                document.getElementById('titleMsg').innerHTML =
+                    '<div class="flash flash-error">仅管理员可操作</div>';
+                return;
+            }
+            var username = document.getElementById('titleUsername').value.trim();
+            var title = document.getElementById('titleInput').value.trim();
+            if (!username) {
+                document.getElementById('titleMsg').innerHTML = '<div class="flash flash-error">请输入用户名</div>';
+                return;
+            }
+            if (!allUsers.find(function(u) { return u.username === username; })) {
+                document.getElementById('titleMsg').innerHTML = '<div class="flash flash-error">用户不存在</div>';
+                return;
+            }
+            if (!title) {
+                document.getElementById('titleMsg').innerHTML = '<div class="flash flash-error">请输入头衔</div>';
+                return;
+            }
+            await apiRequest('/titles', 'POST', { username: username, title: title });
+            await loadAllData();
+            document.getElementById('titleMsg').innerHTML = '<div class="flash">已为 ' + username + ' 设置头衔: ' +
+                title + '</div>';
+            document.getElementById('titleUsername').value = '';
+            document.getElementById('titleInput').value = '';
+            renderTitles();
+            renderUserList();
+        });
+
+        document.getElementById('removeTitleBtn').addEventListener('click', async function() {
+            if (!currentUser || !currentUser.isAdmin) {
+                document.getElementById('titleMsg').innerHTML =
+                    '<div class="flash flash-error">仅管理员可操作</div>';
+                return;
+            }
+            var username = document.getElementById('titleUsername').value.trim();
+            if (!username) {
+                document.getElementById('titleMsg').innerHTML = '<div class="flash flash-error">请输入用户名</div>';
+                return;
+            }
+            if (!allTitles.find(function(t) { return t.username === username; })) {
+                document.getElementById('titleMsg').innerHTML =
+                    '<div class="flash flash-error">该用户没有头衔</div>';
+                return;
+            }
+            await apiRequest('/titles/' + username, 'DELETE');
+            await loadAllData();
+            document.getElementById('titleMsg').innerHTML = '<div class="flash">已移除 ' + username + ' 的头衔</div>';
+            document.getElementById('titleUsername').value = '';
+            renderTitles();
+            renderUserList();
+        });
+
+        // ========== 注册申请管理 ==========
+        function renderRequests() {
+            if (!currentUser || !currentUser.isAdmin) {
+                document.getElementById('requestList').innerHTML = '<li class="empty">仅管理员可查看</li>';
+                return;
+            }
+            document.getElementById('requestCount').textContent = allRegRequests.length;
+            if (allRegRequests.length === 0) {
+                document.getElementById('requestList').innerHTML = '<li class="empty">暂无待审核申请</li>';
+                return;
+            }
+            var html = '';
+            allRegRequests.forEach(function(req) {
+                html += '<li class="list-item">' +
+                    '<span>' + req.username + ' (申请于 ' + (req.time || new Date(req.timestamp)
+                    .toLocaleString()) + ')</span>' +
+                    '<div class="actions">' +
+                    '<button class="btn btn-success btn-sm" onclick="approveRegRequest(\'' + req.id +
+                    '\')">同意</button>' +
+                    '<button class="btn btn-danger btn-sm" onclick="rejectRegRequest(\'' + req.id +
+                    '\')">拒绝</button>' +
+                    '</div>' +
+                    '</li>';
+            });
+            document.getElementById('requestList').innerHTML = html;
+        }
+
+        window.approveRegRequest = async function(requestId) {
+            var req = allRegRequests.find(function(r) { return r.id === requestId; });
+            if (!req) return;
+            if (allUsers.find(function(u) { return u.username === req.username; })) {
+                alert('该用户名已存在');
+                await apiRequest('/reg-requests/' + requestId, 'DELETE');
+                await loadAllData();
+                renderRequests();
+                return;
+            }
+            await apiRequest('/register', 'POST', { username: req.username, password: req.password });
+            await apiRequest('/reg-requests/' + requestId, 'DELETE');
+            await loadAllData();
+            renderRequests();
+            renderUserList();
+            document.getElementById('uploadMessage').innerHTML = '<div class="flash">已批准 ' + req.username +
+                ' 的注册申请</div>';
+        };
+
+        window.rejectRegRequest = async function(requestId) {
+            var req = allRegRequests.find(function(r) { return r.id === requestId; });
+            if (!req) return;
+            if (!confirm('拒绝 ' + req.username + ' 的注册申请？')) return;
+            await apiRequest('/reg-requests/' + requestId, 'DELETE');
+            await loadAllData();
+            renderRequests();
+            document.getElementById('uploadMessage').innerHTML = '<div class="flash">已拒绝 ' + req.username +
+                ' 的申请</div>';
+        };
+
+        // ========== 管理员公告 ==========
+        function renderAdminAnnounces() {
+            if (allAnnounces.length === 0) {
+                document.getElementById('adminAnnounceList').innerHTML = '<li class="empty">暂无公告</li>';
+                return;
+            }
+            var html = '';
+            allAnnounces.forEach(function(a) {
+                var timeStr = a.timestamp ? new Date(a.timestamp).toLocaleString() : '';
+                html += '<li class="list-item">' +
+                    '<span>📢 ' + a.content + ' <span style="font-size:12px; color:#7a8a9e;">' + timeStr +
+                    '</span></span>' +
+                    '<div class="actions">' +
+                    '<button class="btn btn-danger btn-sm" onclick="deleteAnnounce(\'' + a.id +
+                    '\')">取消</button>' +
+                    '</div>' +
+                    '</li>';
+            });
+            document.getElementById('adminAnnounceList').innerHTML = html;
+        }
+
+        window.deleteAnnounce = async function(announceId) {
+            if (!confirm('确定取消这条公告吗？')) return;
+            await apiRequest('/announces/' + announceId, 'DELETE');
+            await loadAllData();
+            renderAdminAnnounces();
+            renderAnnouncementBar();
+            document.getElementById('announcePublishMsg').innerHTML = '<div class="flash">✅ 公告已取消</div>';
+        };
+
+        document.getElementById('postAdminAnnounceBtn').addEventListener('click', async function() {
+            if (!currentUser || !currentUser.isAdmin) {
+                document.getElementById('announcePublishMsg').innerHTML =
+                    '<div class="flash flash-error">仅管理员可发布公告</div>';
+                return;
+            }
+            var content = document.getElementById('adminAnnounceInput').value.trim();
+            if (!content) {
+                document.getElementById('announcePublishMsg').innerHTML =
+                    '<div class="flash flash-error">请输入公告内容</div>';
+                return;
+            }
+            await apiRequest('/announces', 'POST', { content: content });
+            await loadAllData();
+            document.getElementById('adminAnnounceInput').value = '';
+            renderAdminAnnounces();
+            document.getElementById('announcePublishMsg').innerHTML = '<div class="flash">✅ 公告已发布</div>';
+            renderAnnouncementBar();
+        });
+
+        // ========== 管理员创建用户 ==========
+        document.getElementById('adminCreateUserBtn').addEventListener('click', async function() {
+            if (!currentUser || !currentUser.isAdmin) {
+                document.getElementById('adminCreateMsg').textContent = '仅管理员可操作';
+                document.getElementById('adminCreateMsg').style.color = '#b13e3e';
+                return;
+            }
+            var username = document.getElementById('adminCreateUsername').value.trim();
+            var password = document.getElementById('adminCreatePassword').value.trim();
+            if (!username || !password) {
+                document.getElementById('adminCreateMsg').textContent = '请输入用户名和密码';
+                document.getElementById('adminCreateMsg').style.color = '#b13e3e';
+                return;
+            }
+            if (allUsers.find(function(u) { return u.username === username; })) {
+                document.getElementById('adminCreateMsg').textContent = '用户名已存在';
+                document.getElementById('adminCreateMsg').style.color = '#b13e3e';
+                return;
+            }
+            var isLeader = document.getElementById('adminCreateRole').value === 'leader';
+            await apiRequest('/register', 'POST', { username: username, password: password });
+            var users = await apiRequest('/users');
+            var newUser = users.find(function(u) { return u.username === username; });
+            if (newUser) {
+                await apiRequest('/users/' + newUser.id, 'PUT', { isLeader: isLeader });
+            }
+            await loadAllData();
+            document.getElementById('adminCreateUsername').value = '';
+            document.getElementById('adminCreatePassword').value = '';
+            document.getElementById('adminCreateMsg').textContent = '✅ 用户 ' + username + ' 创建成功';
+            document.getElementById('adminCreateMsg').style.color = '#1f7b4d';
+            renderUserList();
+        });
+
+        // ========== 指定组长 ==========
+        document.getElementById('assignLeaderBtn').addEventListener('click', async function() {
+            if (!currentUser || !currentUser.isAdmin) {
+                document.getElementById('assignLeaderMsg').textContent = '仅管理员可操作';
+                document.getElementById('assignLeaderMsg').style.color = '#b13e3e';
+                return;
+            }
+            var userId = document.getElementById('assignLeaderSelect').value;
+            if (!userId) {
+                document.getElementById('assignLeaderMsg').textContent = '请选择用户';
+                document.getElementById('assignLeaderMsg').style.color = '#b13e3e';
+                return;
+            }
+            var user = allUsers.find(function(u) { return u.id === userId; });
+            if (!user) {
+                document.getElementById('assignLeaderMsg').textContent = '用户不存在';
+                document.getElementById('assignLeaderMsg').style.color = '#b13e3e';
+                return;
+            }
+            if (user.isAdmin) {
+                document.getElementById('assignLeaderMsg').textContent = '管理员不能设为组长';
+                document.getElementById('assignLeaderMsg').style.color = '#b13e3e';
+                return;
+            }
+            allUsers.forEach(function(u) { if (u.isLeader) u.isLeader = false; });
+            user.isLeader = true;
+            await apiRequest('/users/' + userId, 'PUT', { isLeader: true });
+            await loadAllData();
+            document.getElementById('assignLeaderMsg').textContent = '已指定 ' + user.username + ' 为组长';
+            document.getElementById('assignLeaderMsg').style.color = '#1f7b4d';
+            renderUserList();
+            renderLeaderList();
+        });
+
+        function renderLeaderList() {
+            var leaders = allUsers.filter(function(u) { return u.isLeader === true && !u.isAdmin; });
+            var html = '';
+            if (leaders.length === 0) {
+                document.getElementById('leaderList').innerHTML = '<li class="empty">暂无组长</li>';
+                return;
+            }
+            leaders.forEach(function(u) {
+                var title = allTitles.find(function(t) { return t.username === u.username; });
+                html += '<li class="list-item"><span>⭐ ' + u.username + (title ? ' 🏅' + title.title : '') +
+                    '</span></li>';
+            });
+            document.getElementById('leaderList').innerHTML = html;
+        }
+
+        function populateLeaderSelect() {
+            var select = document.getElementById('assignLeaderSelect');
+            var currentVal = select.value;
+            select.innerHTML = '<option value="">-- 选择用户 --</option>';
+            allUsers.forEach(function(u) {
+                if (u.id === currentUser?.id) return;
+                if (u.isAdmin) return;
+                var opt = document.createElement('option');
+                opt.value = u.id;
+                opt.textContent = u.username + (u.isLeader ? ' (组长)' : '');
+                if (u.id === currentVal) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+
+        // ========== 私信 ==========
+        function renderChat() {
+            var isLoggedIn = currentUser !== null;
+            if (!isLoggedIn) {
+                document.getElementById('chatLoginRequired').classList.remove('hidden');
+                document.getElementById('chatContent').classList.add('hidden');
+                return;
+            }
+            document.getElementById('chatLoginRequired').classList.add('hidden');
+            document.getElementById('chatContent').classList.remove('hidden');
+
+            var select = document.getElementById('chatUserSelect');
+            var currentVal = select.value;
+            select.innerHTML = '<option value="">-- 选择聊天对象 --</option>';
+            allUsers.forEach(function(u) {
+                if (u.username === currentUser.username) return;
+                var opt = document.createElement('option');
+                opt.value = u.username;
+                opt.textContent = u.username;
+                if (u.username === currentVal) opt.selected = true;
+                select.appendChild(opt);
+            });
+
+            document.getElementById('chatCount').textContent = '0';
+
+            if (currentChatPartner) {
+                showChatConversation(currentChatPartner);
+            } else {
+                document.getElementById('chatConversation').innerHTML =
+                    '<div class="empty" style="padding:20px;">选择一位用户开始聊天</div>';
+            }
+        }
+
+        document.getElementById('chatStartBtn').addEventListener('click', function() {
+            var partner = document.getElementById('chatUserSelect').value;
+            if (!partner) { alert('请选择聊天对象'); return; }
+            currentChatPartner = partner;
+            showChatConversation(partner);
+        });
+
+        document.getElementById('chatRefreshBtn').addEventListener('click', async function() {
+            await loadAllData();
+            if (currentChatPartner) showChatConversation(currentChatPartner);
+        });
+
+        window.downloadChatFile = function(fileId) {
+            if (!currentChatPartner) return;
+            var messages = getConversation(currentUser.username, currentChatPartner);
+            var msg = messages.find(function(m) { return m.fileId === fileId; });
+            if (!msg || !msg.file) { alert('文件不存在'); return; }
+            try {
+                var link = document.createElement('a');
+                link.href = msg.file;
+                link.download = msg.fileName || 'download';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (e) {
+                alert('文件下载失败，请重试');
+            }
+        };
+
+        function getConversation(user1, user2) {
+            var key = [user1, user2].sort().join('_');
+            var allMessages = allChatMessages || {};
+            return allMessages[key] || [];
+        }
+
+        var allChatMessages = {};
+
+        async function showChatConversation(partner) {
+            var messages = await apiRequest('/messages/' + currentUser.username + '/' + partner);
+            var container = document.getElementById('chatConversation');
+
+            var chatWindow = document.createElement('div');
+            chatWindow.className = 'chat-window';
+
+            var msgArea = document.createElement('div');
+            msgArea.className = 'chat-messages';
+            msgArea.id = 'chatMessages';
+
+            if (messages.length === 0) {
+                msgArea.innerHTML = '<div class="empty" style="padding:20px;">暂无消息</div>';
+            } else {
+                var msgHtml = '';
+                messages.forEach(function(m) {
+                    var isSent = m.sender === currentUser.username;
+                    var time = new Date(m.timestamp).toLocaleString();
+                    var fileHtml = '';
+                    if (m.file) {
+                        var fileId = m.fileId || 'file_' + Date.now();
+                        if (!m.fileId) m.fileId = fileId;
+                        fileHtml = '<div class="file-attachment" onclick="downloadChatFile(\'' + fileId +
+                            '\')">' +
+                            '📎 <span class="file-name">' + (m.fileName || '文件') + '</span>' +
+                            '</div>';
+                    }
+                    msgHtml += '<div class="chat-message ' + (isSent ? 'sent' : 'received') + '">' +
+                        (m.content || '') +
+                        fileHtml +
+                        '<span class="msg-time">' + time + '</span>' +
+                        '</div>';
+                });
+                msgArea.innerHTML = msgHtml;
+                msgArea.scrollTop = msgArea.scrollHeight;
+            }
+
+            var inputArea = document.createElement('div');
+            inputArea.className = 'chat-input-area';
+            inputArea.innerHTML =
+                '<textarea id="chatInput" placeholder="输入消息..." rows="1"></textarea>' +
+                '<label class="file-upload-btn" title="传输文件">' +
+                '📎' +
+                '<input type="file" id="chatFileInput">' +
+                '</label>' +
+                '<button class="btn btn-primary" id="chatSendBtn">发送</button>';
+
+            chatWindow.appendChild(msgArea);
+            chatWindow.appendChild(inputArea);
+            container.innerHTML = '';
+            container.appendChild(chatWindow);
+
+            var chatInput = document.getElementById('chatInput');
+            var chatSendBtn = document.getElementById('chatSendBtn');
+            var chatFileInput = document.getElementById('chatFileInput');
+
+            async function sendMessage() {
+                var content = chatInput.value.trim();
+
+                if (chatFileInput.files.length > 0) {
+                    var file = chatFileInput.files[0];
+                    var reader = new FileReader();
+                    reader.onload = async function(e) {
+                        await apiRequest('/messages', 'POST', {
+                            sender: currentUser.username,
+                            receiver: partner,
+                            content: content || '',
+                            file: e.target.result,
+                            fileName: file.name
+                        });
+                        chatFileInput.value = '';
+                        chatInput.value = '';
+                        await loadAllData();
+                        showChatConversation(partner);
+                    };
+                    reader.readAsDataURL(file);
+                    return;
+                }
+
+                if (!content) return;
+                await apiRequest('/messages', 'POST', {
+                    sender: currentUser.username,
+                    receiver: partner,
+                    content: content
+                });
+                chatInput.value = '';
+                await loadAllData();
+                showChatConversation(partner);
+            }
+
+            chatSendBtn.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
+
+        // ========== 初始化 ==========
+        async function init() {
+            var loggedIn = await autoLogin();
+            if (!loggedIn) {
+                await loadAllData();
+                updateUIForLogout();
+                switchPage('pageHome');
+            }
+            populateLeaderSelect();
+        }
+
+        // 快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                var active = document.activeElement;
+                if (active && (active.id === 'loginUsername' || active.id === 'loginPassword')) {
+                    document.getElementById('loginBtn').click();
+                }
+                if (active && (active.id === 'registerUsername' || active.id === 'registerPassword')) {
+                    document.getElementById('registerBtn').click();
+                }
+                if (active && active.id === 'discussInput') {
+                    document.getElementById('postDiscussBtn').click();
+                }
+            }
+        });
+
+        init();
+    </script>
+
+</body>
+</html>
